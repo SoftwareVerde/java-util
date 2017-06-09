@@ -20,6 +20,15 @@ public class StringUtil {
         catch (final UnsupportedEncodingException e) { return ""; }
     }
 
+    /**
+     * Returns a the bytes of the string, decoded via UTF-8.
+     *  NOTE: Returns an empty byte array if the conversion fails.
+     */
+    public static byte[] stringToBytes(final String string) {
+        try { return string.getBytes("UTF-8"); }
+        catch (final UnsupportedEncodingException e) { return new byte[0]; }
+    }
+
     public static String formatNumberString(final Integer number) {
         if (number == null) return "";
         return _numberFormat.format(number);
