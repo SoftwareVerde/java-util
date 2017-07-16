@@ -1,10 +1,7 @@
 package com.softwareverde.util;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Util {
     protected static final NumberFormat _numberFormat = NumberFormat.getNumberInstance(java.util.Locale.US);
@@ -68,6 +65,18 @@ public class Util {
             newSet.add(item);
         }
         return newSet;
+    }
+
+    /**
+     * Returns a shallow-copy of the set as a HashMap.
+     */
+    public static <T, S> Map<T, S> copyMap(final Map<T, S> map) {
+        final Map<T, S> newMap = new HashMap<T, S>();
+        for (final T key : map.keySet()) {
+            final S value = map.get(key);
+            newMap.put(key, value);
+        }
+        return newMap;
     }
 
     /**
