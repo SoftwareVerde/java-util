@@ -39,6 +39,64 @@ public class Util {
         return Boolean.parseBoolean(trimmedNumberString);
     }
 
+    public static Boolean isInt(final String numberString) {
+        try {
+            _numberFormatter.parse(numberString.trim()).intValue();
+            return true;
+        }
+        catch (final Exception e) {
+            return false;
+        }
+    }
+
+    public static Boolean isLong(final String numberString) {
+        try {
+            _numberFormatter.parse(numberString.trim()).longValue();
+            return true;
+        }
+        catch (final Exception e) {
+            return false;
+        }
+    }
+
+    public static Boolean isFloat(final String numberString) {
+        try {
+            _numberFormatter.parse(numberString.trim()).floatValue();
+            return true;
+        }
+        catch (final Exception e) {
+            return false;
+        }
+    }
+
+    public static Boolean isDouble(final String numberString) {
+        try {
+            _numberFormatter.parse(numberString.trim()).doubleValue();
+            return true;
+        }
+        catch (final Exception e) {
+            return false;
+        }
+    }
+
+    public static Boolean isBool(final String numberString) {
+        if (numberString == null) { return false; }
+
+        final String trimmedNumberString = numberString.trim();
+
+        if (trimmedNumberString.equalsIgnoreCase("true") || trimmedNumberString.equalsIgnoreCase("false")) {
+            return true;
+        }
+
+        try {
+            _numberFormatter.parse(numberString).intValue();
+            return true;
+        }
+        catch (final Exception e) {
+            return false;
+        }
+    }
+
     public static Boolean coalesce(final Boolean bool) { return Util.coalesce(bool, false); }
     public static Float coalesce(final Float f) { return Util.coalesce(f, 0.0F); }
     public static Integer coalesce(final Integer number) { return Util.coalesce(number, 0); }
