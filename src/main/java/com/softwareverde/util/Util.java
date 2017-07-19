@@ -1,32 +1,33 @@
 package com.softwareverde.util;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.*;
 
 public class Util {
-    protected static final NumberFormat _numberFormat = NumberFormat.getNumberInstance(java.util.Locale.US);
+    protected static final NumberFormatter _numberFormatter = new NumberFormatter();
 
     public static Integer parseInt(final String numberString) {
         if (numberString == null) { return null; }
-        try { return _numberFormat.parse(numberString.trim()).intValue(); }
+        try { return _numberFormatter.parse(numberString.trim()).intValue(); }
         catch (final Exception e) { return 0; }
     }
 
     public static Long parseLong(final String numberString) {
         if (numberString == null) { return null; }
-        try { return _numberFormat.parse(numberString.trim()).longValue(); }
+        try { return _numberFormatter.parse(numberString.trim()).longValue(); }
         catch (final Exception e) { return 0L; }
     }
 
     public static Float parseFloat(final String numberString) {
         if (numberString == null) { return null; }
-        try { return _numberFormat.parse(numberString.trim()).floatValue(); }
+        try { return _numberFormatter.parse(numberString.trim()).floatValue(); }
         catch (final Exception e) { return 0.0F; }
     }
 
     public static Double parseDouble(final String numberString) {
         if (numberString == null) { return null; }
-        try { return _numberFormat.parse(numberString.trim()).doubleValue(); }
+        try { return _numberFormatter.parse(numberString.trim()).doubleValue(); }
         catch (final Exception e) { return 0.0D; }
     }
 
@@ -87,5 +88,26 @@ public class Util {
         if ( (a == null) || (b == null) ) { return false; }
         return a.equals(b);
     }
+}
 
+/**
+ * NumberFormatter is a thread-safe number formatter that intelligently handles US numbers (e.g. commas, decimals, etc).
+ */
+class NumberFormatter {
+    protected static final ThreadLocal<NumberFormat> _threadLocalNumberFormat = new ThreadLocal<NumberFormat>();
+
+    private NumberFormat _getNumberFormat() {
+        final NumberFormat numberFormat = _threadLocalNumberFormat.get();
+        if (numberFormat != null) {
+            return numberFormat;
+        }
+        else {
+            _threadLocalNumberFormat.set(NumberFormat.getNumberInstance(java.util.Locale.US));
+            return _threadLocalNumberFormat.get();
+        }
+    }
+
+    public Number parse(final String numberString) throws ParseException {
+        return _getNumberFormat().parse(numberString);
+    }
 }
