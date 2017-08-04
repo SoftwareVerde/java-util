@@ -1,7 +1,7 @@
 package com.softwareverde.util;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
+import com.softwareverde.util.numberformat.NumberFormatter;
+
 import java.util.*;
 
 public class Util {
@@ -145,27 +145,5 @@ public class Util {
         if (a == b) { return true; }
         if ( (a == null) || (b == null) ) { return false; }
         return a.equals(b);
-    }
-}
-
-/**
- * NumberFormatter is a thread-safe number formatter that intelligently handles US numbers (e.g. commas, decimals, etc).
- */
-class NumberFormatter {
-    protected static final ThreadLocal<NumberFormat> _threadLocalNumberFormat = new ThreadLocal<NumberFormat>();
-
-    private NumberFormat _getNumberFormat() {
-        final NumberFormat numberFormat = _threadLocalNumberFormat.get();
-        if (numberFormat != null) {
-            return numberFormat;
-        }
-        else {
-            _threadLocalNumberFormat.set(NumberFormat.getNumberInstance(java.util.Locale.US));
-            return _threadLocalNumberFormat.get();
-        }
-    }
-
-    public Number parse(final String numberString) throws ParseException {
-        return _getNumberFormat().parse(numberString);
     }
 }

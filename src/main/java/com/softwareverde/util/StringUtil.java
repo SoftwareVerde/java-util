@@ -1,5 +1,7 @@
 package com.softwareverde.util;
 
+import com.softwareverde.util.numberformat.NumberFormatter;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.NumberFormat;
@@ -9,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringUtil {
-    protected static final NumberFormat _numberFormat = NumberFormat.getNumberInstance(java.util.Locale.US);
+    protected static final NumberFormatter _numberFormatter = new NumberFormatter();
 
     /**
      * Returns a new string from UTF-8 bytes.
@@ -31,7 +33,16 @@ public class StringUtil {
 
     public static String formatNumberString(final Integer number) {
         if (number == null) return "";
-        return _numberFormat.format(number);
+        return _numberFormatter.format(number);
+    }
+
+    /**
+     * Returns a formatted string with 2 decimal-places and a percent sign.
+     *  Numbers are not formatted with commas.
+     *  Ex: 1000.00%
+     */
+    public static String formatPercent(final Float percent) {
+        return String.format("%.2f", percent) + "%";
     }
 
     public static List<String> pregMatch(final String regex, final String haystack) {
