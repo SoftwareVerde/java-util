@@ -39,7 +39,9 @@ public class StringUtil {
     /**
      * Returns a formatted string with 2 decimal-places and a percent sign.
      *  Numbers are not formatted with commas.
-     *  Ex: 1000.00%
+     *  Numbers are rounded at the 2nd decimal place.
+     *  The number is not multiplied by 100.
+     *  Ex: 1000.000000 -> "1000.00%"
      */
     public static String formatPercent(final Float percent) {
         return String.format("%.2f", percent) + "%";
