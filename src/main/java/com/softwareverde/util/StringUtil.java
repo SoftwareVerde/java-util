@@ -44,7 +44,11 @@ public class StringUtil {
      *  Ex: 1000.000000 -> "1000.00%"
      */
     public static String formatPercent(final Float percent) {
-        return String.format("%.2f", percent) + "%";
+        return StringUtil.formatPercent(percent, true);
+    }
+
+    public static String formatPercent(final Float percent, final Boolean includePercentSign) {
+        return String.format("%.2f", percent) + (includePercentSign ? "%" : "");
     }
 
     public static List<String> pregMatch(final String regex, final String haystack) {
