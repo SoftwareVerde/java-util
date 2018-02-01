@@ -2,6 +2,7 @@ package com.softwareverde.util;
 
 import com.softwareverde.util.numberformat.NumberFormatter;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Util {
@@ -31,12 +32,12 @@ public class Util {
         catch (final Exception e) { return 0.0D; }
     }
 
-    public static Boolean parseBool(final String numberString) {
-        if (numberString == null) { return null; }
-        final String trimmedNumberString = numberString.trim();
-        if (trimmedNumberString.equals("0")) { return false; }
-        if (Util.parseInt(trimmedNumberString) > 0) { return true; }
-        return Boolean.parseBoolean(trimmedNumberString);
+    public static Boolean parseBool(final String stringValue) {
+        if (stringValue == null) { return null; }
+        final String trimmedStringValue = stringValue.trim();
+        if (trimmedStringValue.equals("0")) { return false; }
+        if (Util.parseInt(trimmedStringValue) > 0) { return true; }
+        return trimmedStringValue.equalsIgnoreCase("true");
     }
 
     public static Boolean isInt(final String numberString) {
@@ -79,6 +80,12 @@ public class Util {
         }
     }
 
+    /**
+     * Returns true if the number should be interpreted as a boolean value.
+     *  NOTE: isBool() is more restrictive than parseBool().
+     *      For Instance, "1 Angry Duck" returns TRUE for Util.parseBool(),
+     *      whereas the same string will return FALSE for Util.isBool()
+     */
     public static Boolean isBool(final String numberString) {
         if (numberString == null) { return false; }
 
@@ -89,7 +96,7 @@ public class Util {
         }
 
         try {
-            _numberFormatter.parse(numberString).intValue();
+            Integer.parseInt(numberString);
             return true;
         }
         catch (final Exception e) {
@@ -136,6 +143,13 @@ public class Util {
             newMap.put(key, value);
         }
         return newMap;
+    }
+
+    /**
+     * Returns a shallow-copy of the array.
+     */
+    public static <T> T[] copyArray(final T[] array) {
+        return array.clone();
     }
 
     /**
