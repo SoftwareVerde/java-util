@@ -151,6 +151,14 @@ public class Util {
     public static <T> T[] copyArray(final T[] array) {
         return array.clone();
     }
+    public static byte[] copyArray(final byte[] array) { return array.clone(); }
+    public static boolean[] copyArray(final boolean[] array) { return array.clone(); }
+    public static int[] copyArray(final int[] array) { return array.clone(); }
+    public static float[] copyArray(final float[] array) { return array.clone(); }
+    public static long[] copyArray(final long[] array) { return array.clone(); }
+    public static double[] copyArray(final double[] array) { return array.clone(); }
+    public static char[] copyArray(final char[] array) { return array.clone(); }
+    public static short[] copyArray(final short[] array) { return array.clone(); }
 
     /**
      * Performs a null-safe equality check.
