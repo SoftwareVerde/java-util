@@ -80,7 +80,7 @@ public class StringUtil {
         catch (final UnsupportedEncodingException e) { return ""; }
     }
 
-    public static int computeLevenshteinDistance (final String s0, final String s1) {
+    public static int computeLevenshteinDistance(final String s0, final String s1) {
         final int len0 = s0.length() + 1;
         final int len1 = s1.length() + 1;
 
