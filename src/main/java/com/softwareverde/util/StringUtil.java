@@ -4,7 +4,6 @@ import com.softwareverde.util.numberformat.NumberFormatter;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;

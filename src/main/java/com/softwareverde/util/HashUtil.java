@@ -24,7 +24,7 @@ public class HashUtil {
             final byte[] array = messageDigest.digest(s.getBytes());
             final StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < array.length; ++i) {
-                stringBuilder.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+                stringBuilder.append(Integer.toHexString((array[i] & 0xFF) | 0x0100).substring(1,3));
             }
             return stringBuilder.toString();
         }
