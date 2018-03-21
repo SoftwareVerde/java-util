@@ -1,48 +1,59 @@
 package com.softwareverde.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import com.softwareverde.logging.Log;
+
+import java.io.*;
 
 public class IoUtil {
 
-    private static byte[] _readStream(final InputStream inputStream) {
+    private static byte[] _readStream(final InputStream inputStream) throws IOException {
         final byte[] bytes;
 
-        try {
-            final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
+        try (final ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
             int nRead;
             byte[] readBuffer = new byte[1024];
             while ((nRead = inputStream.read(readBuffer, 0, readBuffer.length)) != -1) {
                 buffer.write(readBuffer, 0, nRead);
             }
-            inputStream.close();
 
             buffer.flush();
             bytes = buffer.toByteArray();
             buffer.close();
-
-        }
-        catch (final Exception e) {
-            return (new byte[0]);
         }
 
         return bytes;
     }
 
     public static byte[] readStream(final InputStream inputStream) {
-        return _readStream(inputStream);
+        try {
+            return _readStream(inputStream);
+        }
+        catch (Exception e) {
+            Log.error("Unable to read stream", e);
+            return null;
+        }
+        finally {
+            try {
+                inputStream.close();
+            }
+            catch (IOException e) {}
+        }
     }
 
     public static String streamToString(final InputStream inputStream) {
         try {
             return new String(IoUtil._readStream(inputStream), "UTF-8");
         }
-        catch (final Exception e) { }
-
-        return "";
+        catch (final Exception e) {
+            Log.error("Unable to read stream", e);
+            return null;
+        }
+        finally {
+            try {
+                inputStream.close();
+            }
+            catch (IOException e) {}
+        }
     }
 
     /**
@@ -57,18 +68,17 @@ public class IoUtil {
     }
 
     public static byte[] getFileContents(final File file) {
-        try {
-            final InputStream inputStream = new FileInputStream(file);
+        try (final InputStream inputStream = new FileInputStream(file)) {
             return IoUtil._readStream(inputStream);
         }
-        catch (final Exception e) { }
-
-        return (new byte[0]);
+        catch (final Exception e) {
+            Log.error("Unable to read file contents", e);
+            return null;
+        }
     }
 
     public static byte[] getFileContents(final String filename) {
         final File file = new File(filename);
-        if ((! file.exists()) || (! file.canRead())) { return new byte[0]; }
         return IoUtil.getFileContents(file);
     }
 }

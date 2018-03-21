@@ -39,9 +39,9 @@ public class ByteUtil {
      *  Format is assumed to be Big Endian.
      *  If less than the required bytes are provided, the provided bytes are left-padded with zeroes.
      *  ex.:
-     *      00 00 00 01 -> 1
-     *      00 00 01 00 -> 255
-     *      10 00 00 00 -> 268435456
+     *      00 00 00 01 -&gt; 1
+     *      00 00 01 00 -&gt; 255
+     *      10 00 00 00 -&gt; 268435456
      */
     public static long bytesToLong(final byte[] bytes) {
         return _bytesToLong(8, bytes);
@@ -52,9 +52,9 @@ public class ByteUtil {
      *  Format is assumed to be Big Endian.
      *  If less than the required bytes are provided, the provided bytes are left-padded with zeroes.
      *  ex.:
-     *      00 00 00 01 -> 1
-     *      00 00 01 00 -> 255
-     *      10 00 00 00 -> 268435456
+     *      00 00 00 01 -&gt; 1
+     *      00 00 01 00 -&gt; 255
+     *      10 00 00 00 -&gt; 268435456
      */
     public static int bytesToInteger(final byte[] bytes) {
         return (int) _bytesToLong(4, bytes);

@@ -1,5 +1,6 @@
 package com.softwareverde.util;
 
+import com.softwareverde.logging.Log;
 import com.softwareverde.util.numberformat.NumberFormatter;
 
 import java.util.*;
@@ -9,26 +10,50 @@ public class Util {
 
     public static Integer parseInt(final String numberString) {
         if (numberString == null) { return null; }
-        try { return _numberFormatter.parse(numberString.trim()).intValue(); }
-        catch (final Exception e) { return 0; }
+
+        try {
+            return _numberFormatter.parse(numberString.trim()).intValue();
+        }
+        catch (final Exception e) {
+            Log.warn("Invalid integer string: " + numberString, e);
+            return 0;
+        }
     }
 
     public static Long parseLong(final String numberString) {
         if (numberString == null) { return null; }
-        try { return _numberFormatter.parse(numberString.trim()).longValue(); }
-        catch (final Exception e) { return 0L; }
+
+        try {
+            return _numberFormatter.parse(numberString.trim()).longValue();
+        }
+        catch (final Exception e) {
+            Log.warn("Invalid long string: " + numberString, e);
+            return 0L;
+        }
     }
 
     public static Float parseFloat(final String numberString) {
         if (numberString == null) { return null; }
-        try { return _numberFormatter.parse(numberString.trim()).floatValue(); }
-        catch (final Exception e) { return 0.0F; }
+
+        try {
+            return _numberFormatter.parse(numberString.trim()).floatValue();
+        }
+        catch (final Exception e) {
+            Log.warn("Invalid float string: " + numberString, e);
+            return 0.0F;
+        }
     }
 
     public static Double parseDouble(final String numberString) {
         if (numberString == null) { return null; }
-        try { return _numberFormatter.parse(numberString.trim()).doubleValue(); }
-        catch (final Exception e) { return 0.0D; }
+
+        try {
+            return _numberFormatter.parse(numberString.trim()).doubleValue();
+        }
+        catch (final Exception e) {
+            Log.warn("Invalid double string: " + numberString, e);
+            return 0.0D;
+        }
     }
 
     public static Boolean parseBool(final String stringValue) {

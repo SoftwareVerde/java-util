@@ -14,8 +14,9 @@ public class HashUtil {
             }
             return stringBuilder.toString();
         }
-        catch (final NoSuchAlgorithmException exception) { }
-        return null;
+        catch (final NoSuchAlgorithmException exception) {
+            return null;
+        }
     }
 
     public static String sha256(final String s) {
@@ -28,7 +29,8 @@ public class HashUtil {
             }
             return stringBuilder.toString();
         }
-        catch (final NoSuchAlgorithmException exception) { }
-        return null;
+        catch (final NoSuchAlgorithmException exception) {
+            return null;
+        }
     }
 }

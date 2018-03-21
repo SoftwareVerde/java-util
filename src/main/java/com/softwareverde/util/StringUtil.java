@@ -17,8 +17,12 @@ public class StringUtil {
      *  NOTE: Returns an empty string if the conversion fails.
      */
     public static String bytesToString(final byte[] bytes) {
-        try { return new String(bytes, "UTF-8"); }
-        catch (final UnsupportedEncodingException e) { return ""; }
+        try {
+            return new String(bytes, "UTF-8");
+        }
+        catch (final UnsupportedEncodingException e) {
+            return null;
+        }
     }
 
     /**
@@ -26,12 +30,16 @@ public class StringUtil {
      *  NOTE: Returns an empty byte array if the conversion fails.
      */
     public static byte[] stringToBytes(final String string) {
-        try { return string.getBytes("UTF-8"); }
-        catch (final UnsupportedEncodingException e) { return new byte[0]; }
+        try {
+            return string.getBytes("UTF-8");
+        }
+        catch (final UnsupportedEncodingException e) {
+            return null;
+        }
     }
 
     public static String formatNumberString(final Integer number) {
-        if (number == null) return "";
+        if (number == null) { return null; }
         return _numberFormatter.format(number);
     }
 
@@ -40,7 +48,7 @@ public class StringUtil {
      *  Numbers are not formatted with commas.
      *  Numbers are rounded at the 2nd decimal place.
      *  The number is not multiplied by 100.
-     *  Ex: 1000.000000 -> "1000.00%"
+     *  Ex: 1000.000000 -&gt; "1000.00%"
      */
     public static String formatPercent(final Float percent) {
         return StringUtil.formatPercent(percent, true);
@@ -75,9 +83,9 @@ public class StringUtil {
     }
 
     public static String urlEncode(final String string) {
-        if (string == null) { return ""; }
+        if (string == null) { return null; }
         try { return URLEncoder.encode(string, "UTF-8"); }
-        catch (final UnsupportedEncodingException e) { return ""; }
+        catch (final UnsupportedEncodingException e) { return null; }
     }
 
     public static int computeLevenshteinDistance(final String s0, final String s1) {

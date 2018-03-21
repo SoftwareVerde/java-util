@@ -1,5 +1,7 @@
 package com.softwareverde.util;
 
+import com.softwareverde.logging.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -8,7 +10,7 @@ public class DateUtil {
     /**
      * @param datetime  - The Y-m-d H:i:s date string. If null, return value is null.
      * @return          - Returns the epoch with milliseconds.
-     *                  - Returns 0 if the value was invalid.
+     *                  - Returns null if the value was invalid.
      */
     public static Long datetimeToTimestamp(final String datetime) {
         if (datetime == null) { return null; }
@@ -18,7 +20,10 @@ public class DateUtil {
             final Date date = dateFormat.parse(datetime);
             return date.getTime();
         }
-        catch (final Exception e) { return 0L; }
+        catch (final Exception e) {
+            Log.error("Invalid date-time.", e);
+            return null;
+        }
     }
 
     /**

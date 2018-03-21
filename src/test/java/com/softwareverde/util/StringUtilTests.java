@@ -56,6 +56,6 @@ public class StringUtilTests {
         final String numberString = StringUtil.formatNumberString(null);
 
         // Assert
-        Assert.assertEquals("", numberString);
+        Assert.assertEquals(null, numberString);
     }
 }
