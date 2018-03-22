@@ -2,6 +2,7 @@ package com.softwareverde.constable.list.mutable;
 
 import com.softwareverde.constable.list.List;
 import com.softwareverde.constable.list.immutable.ImmutableList;
+import com.softwareverde.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +39,7 @@ public class MutableList<T> implements List<T> {
     }
 
     public void addAll(final List<T> items) {
-        // TODO: Improve the performance of this, since ArrayList.add() can't intelligently grow...
+        _items.ensureCapacity(items.getSize());
         for (final T item : items) {
             _items.add(item);
         }
@@ -85,5 +86,23 @@ public class MutableList<T> implements List<T> {
     @Override
     public Iterator<T> iterator() {
         return _items.iterator();
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (object == null) { return false; }
+        if (! (object instanceof List)) { return false; }
+
+        final int size = _items.size();
+
+        final List list = (List) object;
+        if (size != list.getSize()) { return false; }
+        for (int i = 0; i < size; ++i) {
+            final T item0 = _items.get(i);
+            final Object item1 = list.get(i);
+            if (! Util.areEqual(item0, item1)) { return false; }
+        }
+
+        return true;
     }
 }
