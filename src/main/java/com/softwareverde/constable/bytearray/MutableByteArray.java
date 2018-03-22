@@ -5,19 +5,21 @@ import com.softwareverde.util.HexUtil;
 
 public class MutableByteArray implements ByteArray {
     public static MutableByteArray wrap(final byte[] bytes) {
-        final MutableByteArray mutableByteArray = new MutableByteArray();
-        mutableByteArray._bytes = bytes;
-        return mutableByteArray;
+        return new MutableByteArray(bytes);
     }
 
-    protected byte[] _bytes;
-
-    protected MutableByteArray() {
-        _bytes = null;
+    public static MutableByteArray copyOf(final byte[] bytes) {
+        return new MutableByteArray(ByteUtil.copyBytes(bytes));
     }
 
-    public MutableByteArray(final byte[] bytes) {
-        _bytes = ByteUtil.copyBytes(bytes);
+    protected final byte[] _bytes;
+
+    protected MutableByteArray(final byte[] bytes) {
+        _bytes = bytes;
+    }
+
+    public MutableByteArray(final ByteArray byteArray) {
+        _bytes = ByteUtil.copyBytes(byteArray.getBytes());
     }
 
     public MutableByteArray(final int byteCount) {
@@ -60,6 +62,10 @@ public class MutableByteArray implements ByteArray {
 
     @Override
     public byte[] getBytes() {
+        return ByteUtil.copyBytes(_bytes);
+    }
+
+    public byte[] unwrap() {
         return _bytes;
     }
 

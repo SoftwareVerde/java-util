@@ -14,6 +14,13 @@ public class MutableList<T> implements List<T> {
         _items = new ArrayList<T>(items);
     }
 
+    public MutableList(final List<T> items) {
+        _items = new ArrayList<T>(items.getSize());
+        for (final T item : items) {
+            _items.add(item);
+        }
+    }
+
     public MutableList() {
         _items = new ArrayList<T>();
     }

@@ -7,6 +7,10 @@ import com.softwareverde.util.HexUtil;
 public class ImmutableByteArray implements ByteArray, Const {
     protected final byte[] _bytes;
 
+    public ImmutableByteArray() {
+        _bytes = new byte[0];
+    }
+
     public ImmutableByteArray(final byte[] bytes) {
         _bytes = ByteUtil.copyBytes(bytes);
     }
