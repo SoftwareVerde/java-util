@@ -12,7 +12,7 @@ public class MutableByteArray implements ByteArray {
         return new MutableByteArray(ByteUtil.copyBytes(bytes));
     }
 
-    protected final byte[] _bytes;
+    protected byte[] _bytes;
 
     protected MutableByteArray(final byte[] bytes) {
         _bytes = bytes;
@@ -29,6 +29,12 @@ public class MutableByteArray implements ByteArray {
     public void set(final int index, final byte b) {
         if (index >= _bytes.length) { throw new IndexOutOfBoundsException(); }
         _bytes[index] = b;
+    }
+
+    public void resize(final int newByteCount) {
+        final byte[] bytes = _bytes;
+        _bytes = new byte[newByteCount];
+        ByteUtil.setBytes(_bytes, bytes);
     }
 
     @Override
