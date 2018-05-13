@@ -20,6 +20,11 @@ public class Util {
         }
     }
 
+    public static Integer parseInt(final String numberString, final Integer defaultValue) {
+        if (! Util.isInt(numberString)) { return defaultValue; }
+        return Util.parseInt(numberString);
+    }
+
     public static Long parseLong(final String numberString) {
         if (numberString == null) { return null; }
 
@@ -30,6 +35,11 @@ public class Util {
             Log.warn("Invalid long string: " + numberString, e);
             return 0L;
         }
+    }
+
+    public static Long parseLong(final String numberString, final Long defaultValue) {
+        if (! Util.isLong(numberString)) { return defaultValue; }
+        return Util.parseLong(numberString);
     }
 
     public static Float parseFloat(final String numberString) {
@@ -44,6 +54,11 @@ public class Util {
         }
     }
 
+    public static Float parseFloat(final String numberString, final Float defaultValue) {
+        if (! Util.isFloat(numberString)) { return defaultValue; }
+        return Util.parseFloat(numberString);
+    }
+
     public static Double parseDouble(final String numberString) {
         if (numberString == null) { return null; }
 
@@ -56,6 +71,11 @@ public class Util {
         }
     }
 
+    public static Double parseDouble(final String numberString, final Double defaultValue) {
+        if (! Util.isDouble(numberString)) { return defaultValue; }
+        return Util.parseDouble(numberString);
+    }
+
     public static Boolean parseBool(final String stringValue) {
         if (stringValue == null) { return null; }
         final String trimmedStringValue = stringValue.trim();
@@ -64,7 +84,14 @@ public class Util {
         return trimmedStringValue.equalsIgnoreCase("true");
     }
 
+    public static Boolean parseBool(final String numberString, final Boolean defaultValue) {
+        if (! Util.isBool(numberString)) { return defaultValue; }
+        return Util.parseBool(numberString);
+    }
+
     public static Boolean isInt(final String numberString) {
+        if (numberString == null) { return false; }
+
         try {
             _numberFormatter.parse(numberString.trim()).intValue();
             return true;
@@ -75,6 +102,8 @@ public class Util {
     }
 
     public static Boolean isLong(final String numberString) {
+        if (numberString == null) { return false; }
+
         try {
             _numberFormatter.parse(numberString.trim()).longValue();
             return true;
@@ -85,6 +114,8 @@ public class Util {
     }
 
     public static Boolean isFloat(final String numberString) {
+        if (numberString == null) { return false; }
+
         try {
             _numberFormatter.parse(numberString.trim()).floatValue();
             return true;
@@ -95,6 +126,8 @@ public class Util {
     }
 
     public static Boolean isDouble(final String numberString) {
+        if (numberString == null) { return false; }
+
         try {
             _numberFormatter.parse(numberString.trim()).doubleValue();
             return true;
