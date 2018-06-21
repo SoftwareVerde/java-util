@@ -1,6 +1,14 @@
 package com.softwareverde.util;
 
 public class ByteUtil {
+    public static class Unit {
+        public static final Long BYTES      =          0x01L;
+        public static final Long KILOBYTES  =         0x400L;
+        public static final Long MEGABYTES  =      0x100000L;
+        public static final Long GIGABYTES  =    0x40000000L;
+        public static final Long TERABYTES  = 0x10000000000L;
+    }
+
     public static byte[] integerToBytes(final int value) {
         return new byte[] {
             (byte) (value >>> 24),
