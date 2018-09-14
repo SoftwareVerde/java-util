@@ -26,7 +26,7 @@ public class MutableByteArray implements ByteArray {
         _bytes = new byte[byteCount];
     }
 
-    public void set(final int index, final byte b) {
+    public void set(final int index, final byte b) throws IndexOutOfBoundsException {
         if (index >= _bytes.length) { throw new IndexOutOfBoundsException(); }
         _bytes[index] = b;
     }
@@ -38,14 +38,37 @@ public class MutableByteArray implements ByteArray {
     }
 
     @Override
-    public byte getByte(final int index) {
+    public byte getByte(final int index) throws IndexOutOfBoundsException {
         if (index >= _bytes.length) { throw new IndexOutOfBoundsException(); }
 
         return _bytes[index];
     }
 
     @Override
-    public byte[] getBytes(final int index, final int byteCount) {
+    public boolean getBit(final int index) throws IndexOutOfBoundsException {
+        final int byteIndex = (index >>> 3);
+        if (byteIndex >= _bytes.length) { throw new IndexOutOfBoundsException(); }
+
+        return ImmutableByteArray._getBit(_bytes, index);
+    }
+
+    public void setBit(final int index, final boolean isSet) throws IndexOutOfBoundsException {
+        final int byteIndex = (index >>> 3);
+        if (byteIndex >= _bytes.length) { throw new IndexOutOfBoundsException(); }
+
+        final byte b = _bytes[byteIndex];
+        final int bitMask = ( 0x01 << (7 - (0x07 & index)) );
+
+        if (isSet) {
+            _bytes[byteIndex] = (byte) (b | bitMask);
+        }
+        else {
+            _bytes[byteIndex] = (byte) (b & (~bitMask));
+        }
+    }
+
+    @Override
+    public byte[] getBytes(final int index, final int byteCount) throws IndexOutOfBoundsException {
         if (index + byteCount >= _bytes.length) { throw new IndexOutOfBoundsException(); }
 
         final byte[] bytes = new byte[byteCount];

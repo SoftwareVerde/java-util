@@ -5,6 +5,14 @@ import com.softwareverde.util.ByteUtil;
 import com.softwareverde.util.HexUtil;
 
 public class ImmutableByteArray implements ByteArray, Const {
+    protected static boolean _getBit(final byte[] bytes, final int index) {
+        final int byteIndex = (index >>> 3);
+        final byte b = bytes[byteIndex];
+
+        final int bitMask = ( 0x01 << ( 7 - (0x07 & index) ) );
+        return ( (b & bitMask) != 0x00 );
+    }
+
     protected final byte[] _bytes;
 
     public ImmutableByteArray() {
@@ -25,14 +33,22 @@ public class ImmutableByteArray implements ByteArray, Const {
     }
 
     @Override
-    public byte getByte(final int index) {
+    public byte getByte(final int index) throws IndexOutOfBoundsException {
         if (index >= _bytes.length) { throw new IndexOutOfBoundsException(); }
 
         return _bytes[index];
     }
 
     @Override
-    public byte[] getBytes(final int index, final int byteCount) {
+    public boolean getBit(final int index) throws IndexOutOfBoundsException {
+        final int byteIndex = (index >>> 3);
+        if (byteIndex >= _bytes.length) { throw new IndexOutOfBoundsException(); }
+
+        return _getBit(_bytes, index);
+    }
+
+    @Override
+    public byte[] getBytes(final int index, final int byteCount) throws IndexOutOfBoundsException {
         if (index + byteCount >= _bytes.length) { throw new IndexOutOfBoundsException(); }
 
         final byte[] bytes = new byte[byteCount];
