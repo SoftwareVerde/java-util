@@ -220,9 +220,24 @@ public class Util {
     /**
      * Performs a null-safe equality check.
      */
-    public static <T> Boolean areEqual(final T a, final T b) {
+    public static <T, S> Boolean areEqual(final T a, final S b) {
         if (a == b) { return true; }
         if ( (a == null) || (b == null) ) { return false; }
+
+        if ( (a instanceof Number) && (b instanceof Number) ) {
+            final Number numberA = (Number) a;
+            final Number numberB = (Number) b;
+
+            // Check for inequality against the non-floating-point extremes...
+            if (numberA.longValue() != numberB.longValue()) { return false; }
+            if (numberA.byteValue() != numberB.byteValue()) { return false; }
+
+            // Check for inequality against the floating-point extremes...
+            if (numberA.floatValue() != numberB.floatValue()) { return false; }
+            if (numberA.doubleValue() != numberB.doubleValue()) { return false; }
+            return true;
+        }
+
         return a.equals(b);
     }
 }
