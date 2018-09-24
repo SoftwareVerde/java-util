@@ -35,6 +35,10 @@ public class MutableList<T> implements List<T> {
         _items.add(item);
     }
 
+    public void add(final int index, final T item) {
+        _items.add(index, item);
+    }
+
     public void set(final int index, final T item) {
         _items.set(index, item);
     }
