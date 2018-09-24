@@ -1,5 +1,6 @@
 package com.softwareverde.util;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -17,13 +18,27 @@ public class RotatingQueue<E> extends ConcurrentLinkedQueue<E> {
     }
 
     @Override
-    public boolean add(final E o) {
-        final Boolean itemWasAdded = super.add(o);
+    public boolean add(final E item) {
+        final Boolean itemWasAdded = super.add(item);
 
         while (itemWasAdded && this.size() > _maxItemCount) {
             this.remove();
         }
 
         return itemWasAdded;
+    }
+
+    @Override
+    public boolean addAll(final Collection<? extends E> objects) {
+        for (final E item : objects) {
+            this.add(item);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean offer(final E item) {
+        return this.add(item);
     }
 }
