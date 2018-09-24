@@ -2,6 +2,7 @@ package com.softwareverde.constable.list.mutable;
 
 import com.softwareverde.constable.list.List;
 import com.softwareverde.constable.list.immutable.ImmutableList;
+import com.softwareverde.constable.list.immutable.ImmutableListIterator;
 import com.softwareverde.util.Util;
 
 import java.util.ArrayList;
@@ -53,6 +54,10 @@ public class MutableList<T> implements List<T> {
         _items.clear();
     }
 
+    public Iterator<T> mutableIterator() {
+        return _items.iterator();
+    }
+
     @Override
     public T get(final int index) {
         return _items.get(index);
@@ -85,7 +90,7 @@ public class MutableList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return _items.iterator();
+        return new ImmutableListIterator<T>(this);
     }
 
     @Override

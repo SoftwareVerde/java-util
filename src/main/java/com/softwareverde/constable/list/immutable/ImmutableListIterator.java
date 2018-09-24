@@ -9,7 +9,7 @@ public class ImmutableListIterator<T> implements Iterator<T> {
     private final List<T> _items;
     private int _index = 0;
 
-    ImmutableListIterator(final List<T> items) {
+    public ImmutableListIterator(final List<T> items) {
         _items = items;
     }
 
