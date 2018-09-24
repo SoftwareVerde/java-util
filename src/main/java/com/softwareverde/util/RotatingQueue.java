@@ -11,15 +11,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class RotatingQueue<E> extends ConcurrentLinkedQueue<E> {
 
-    private final Integer _maxItemCount;
+    protected final Integer _maxItemCount;
 
     public RotatingQueue(final Integer maxItemCount) {
         this._maxItemCount = maxItemCount;
     }
 
-    @Override
-    public boolean add(final E item) {
-        final Boolean itemWasAdded = super.add(item);
+    protected boolean _addItem(final E item) {
+        final boolean itemWasAdded = super.offer(item);
 
         while (itemWasAdded && this.size() > _maxItemCount) {
             this.remove();
@@ -29,9 +28,14 @@ public class RotatingQueue<E> extends ConcurrentLinkedQueue<E> {
     }
 
     @Override
+    public boolean add(final E item) {
+        return _addItem(item);
+    }
+
+    @Override
     public boolean addAll(final Collection<? extends E> objects) {
         for (final E item : objects) {
-            this.add(item);
+            _addItem(item);
         }
 
         return true;
@@ -39,6 +43,6 @@ public class RotatingQueue<E> extends ConcurrentLinkedQueue<E> {
 
     @Override
     public boolean offer(final E item) {
-        return this.add(item);
+        return _addItem(item);
     }
 }
