@@ -5,9 +5,7 @@ import com.softwareverde.constable.list.immutable.ImmutableList;
 import com.softwareverde.constable.list.immutable.ImmutableListIterator;
 import com.softwareverde.util.Util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 public class MutableList<T> implements List<T> {
     private final ArrayList<T> _items;
@@ -60,6 +58,10 @@ public class MutableList<T> implements List<T> {
 
     public Iterator<T> mutableIterator() {
         return _items.iterator();
+    }
+
+    public void sort(final Comparator<T> comparator) {
+        Collections.sort(_items, comparator);
     }
 
     @Override
