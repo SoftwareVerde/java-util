@@ -1,5 +1,6 @@
 package com.softwareverde.util;
 
+import com.softwareverde.constable.bytearray.MutableByteArray;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -215,5 +216,42 @@ public class UtilTests {
 
         // Assert
         Assert.assertFalse(areEqual);
+    }
+
+    @Test
+    public void areEqual_should_be_equal_for_floats() {
+        Assert.assertTrue(Util.areEqual(0F, 0F, 0.000001F));
+        Assert.assertTrue(Util.areEqual(0.205F, 0.200F, 0.01F));
+        Assert.assertTrue(Util.areEqual(0.200F, 0.205F, 0.01F));
+
+        Assert.assertFalse(Util.areEqual(0F, 0.00001F, 0.000001F));
+        Assert.assertFalse(Util.areEqual(0.205F, 0.200F, 0.001F));
+        Assert.assertFalse(Util.areEqual(0.200F, 0.205F, 0.001F));
+
+        Assert.assertTrue(Util.areEqual(0D, 0D, 0.000001D));
+        Assert.assertTrue(Util.areEqual(0.205D, 0.200D, 0.01D));
+        Assert.assertTrue(Util.areEqual(0.200D, 0.205D, 0.01D));
+
+        Assert.assertFalse(Util.areEqual(0D, 0.00001D, 0.000001D));
+        Assert.assertFalse(Util.areEqual(0.205D, 0.200D, 0.001D));
+        Assert.assertFalse(Util.areEqual(0.200D, 0.205D, 0.001D));
+    }
+
+    @Test
+    public void areEqual_should_be_equal_for_jbyteArrays() {
+        Assert.assertTrue(Util.areEqual(new byte[]{ 0x00, 0x01 }, new byte[]{ 0x00, 0x01 }));
+        Assert.assertFalse(Util.areEqual(new byte[]{ 0x00, 0x00 }, new byte[]{ 0x00, 0x01 }));
+
+        Assert.assertTrue(Util.areEqual(new byte[]{ 0x00, 0x01 }, MutableByteArray.wrap(new byte[]{ 0x00, 0x01 })));
+        Assert.assertFalse(Util.areEqual(new byte[]{ 0x00, 0x02 }, MutableByteArray.wrap(new byte[]{ 0x00, 0x01 })));
+
+        Assert.assertTrue(Util.areEqual(MutableByteArray.wrap(new byte[]{ 0x00, 0x01 }), new byte[]{ 0x00, 0x01 }));
+        Assert.assertFalse(Util.areEqual(MutableByteArray.wrap(new byte[]{ 0x00, 0x02 }), new byte[]{ 0x00, 0x01 }));
+
+        Assert.assertTrue(Util.areEqual(new MutableByteArray(0), new byte[]{ }));
+        Assert.assertFalse(Util.areEqual(new MutableByteArray(1), new byte[]{ }));
+
+        Assert.assertTrue(Util.areEqual(new byte[]{ }, new MutableByteArray(0)));
+        Assert.assertFalse(Util.areEqual(new byte[]{ }, new MutableByteArray(1)));
     }
 }

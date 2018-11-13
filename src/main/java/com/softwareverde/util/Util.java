@@ -238,6 +238,23 @@ public class Util {
             return true;
         }
 
+        if (a instanceof byte[]) {
+            if (b instanceof byte[]) {
+                return Arrays.equals((byte[]) a, (byte[]) b);
+            }
+            else {
+                return b.equals(a);
+            }
+        }
+
         return a.equals(b);
+    }
+
+    public static Boolean areEqual(final Float a, final Float b, final Float delta) {
+        return (Math.abs(a - b) < delta);
+    }
+
+    public static Boolean areEqual(final Double a, final Double b, final Double delta) {
+        return (Math.abs(a - b) < delta);
     }
 }
