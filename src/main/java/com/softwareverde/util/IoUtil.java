@@ -18,7 +18,6 @@ public class IoUtil {
 
             buffer.flush();
             bytes = buffer.toByteArray();
-            buffer.close();
         }
 
         return bytes;
@@ -28,15 +27,15 @@ public class IoUtil {
         try {
             return _readStream(inputStream);
         }
-        catch (Exception e) {
-            Log.error("Unable to read stream", e);
+        catch (final Exception exception) {
+            Log.error("Unable to read stream", exception);
             return null;
         }
         finally {
             try {
                 inputStream.close();
             }
-            catch (IOException e) {}
+            catch (final IOException ioException) { }
         }
     }
 
@@ -44,15 +43,15 @@ public class IoUtil {
         try {
             return new String(IoUtil._readStream(inputStream), "UTF-8");
         }
-        catch (final Exception e) {
-            Log.error("Unable to read stream", e);
+        catch (final Exception exception) {
+            Log.error("Unable to read stream", exception);
             return null;
         }
         finally {
             try {
                 inputStream.close();
             }
-            catch (IOException e) {}
+            catch (final IOException exception) { }
         }
     }
 
@@ -71,9 +70,21 @@ public class IoUtil {
         try (final InputStream inputStream = new FileInputStream(file)) {
             return IoUtil._readStream(inputStream);
         }
-        catch (final Exception e) {
-            Log.error("Unable to read file contents", e);
+        catch (final Exception exception) {
+            Log.error("Unable to read file contents", exception);
             return null;
+        }
+    }
+
+    public static Boolean putFileContents(final String filename, final byte[] bytes) {
+        try (final OutputStream outputStream = new FileOutputStream(filename)) {
+            outputStream.write(bytes);
+            outputStream.flush();
+            return true;
+        }
+        catch (final Exception exception) {
+            Log.error("Unable to read file contents", exception);
+            return false;
         }
     }
 
