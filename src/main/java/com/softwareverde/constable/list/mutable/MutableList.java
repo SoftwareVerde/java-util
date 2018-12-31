@@ -48,6 +48,10 @@ public class MutableList<T> implements List<T> {
         }
     }
 
+    public void addAll(final Collection<T> items) {
+        _items.addAll(items);
+    }
+
     public T remove(final int index) {
         return _items.remove(index);
     }
