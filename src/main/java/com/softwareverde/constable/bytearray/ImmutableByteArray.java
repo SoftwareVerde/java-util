@@ -5,8 +5,8 @@ import com.softwareverde.util.ByteUtil;
 import com.softwareverde.util.HexUtil;
 
 public class ImmutableByteArray implements ByteArray, Const {
-    protected static boolean _getBit(final byte[] bytes, final int index) {
-        final int byteIndex = (index >>> 3);
+    protected static boolean _getBit(final byte[] bytes, final long index) {
+        final int byteIndex = (int) (index >>> 3);
         final byte b = bytes[byteIndex];
 
         final int bitMask = ( 0x01 << ( 7 - (0x07 & index) ) );
@@ -40,8 +40,8 @@ public class ImmutableByteArray implements ByteArray, Const {
     }
 
     @Override
-    public boolean getBit(final int index) throws IndexOutOfBoundsException {
-        final int byteIndex = (index >>> 3);
+    public boolean getBit(final long index) throws IndexOutOfBoundsException {
+        final long byteIndex = (index >>> 3);
         if (byteIndex >= _bytes.length) { throw new IndexOutOfBoundsException(); }
 
         return _getBit(_bytes, index);

@@ -45,25 +45,27 @@ public class MutableByteArray implements ByteArray {
     }
 
     @Override
-    public boolean getBit(final int index) throws IndexOutOfBoundsException {
-        final int byteIndex = (index >>> 3);
+    public boolean getBit(final long index) throws IndexOutOfBoundsException {
+        final long byteIndex = (index >>> 3);
         if (byteIndex >= _bytes.length) { throw new IndexOutOfBoundsException(); }
 
         return ImmutableByteArray._getBit(_bytes, index);
     }
 
-    public void setBit(final int index, final boolean isSet) throws IndexOutOfBoundsException {
-        final int byteIndex = (index >>> 3);
+    public void setBit(final long index, final boolean isSet) throws IndexOutOfBoundsException {
+        final long byteIndex = (index >>> 3);
         if (byteIndex >= _bytes.length) { throw new IndexOutOfBoundsException(); }
 
-        final byte b = _bytes[byteIndex];
+        final int byteIndexInt = (int) byteIndex;
+
+        final byte b = _bytes[byteIndexInt];
         final int bitMask = ( 0x01 << (7 - (0x07 & index)) );
 
         if (isSet) {
-            _bytes[byteIndex] = (byte) (b | bitMask);
+            _bytes[byteIndexInt] = (byte) (b | bitMask);
         }
         else {
-            _bytes[byteIndex] = (byte) (b & (~bitMask));
+            _bytes[byteIndexInt] = (byte) (b & (~bitMask));
         }
     }
 

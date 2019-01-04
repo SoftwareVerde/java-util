@@ -209,4 +209,25 @@ public class ByteArrayTests {
         Assert.assertFalse(bit7);
         Assert.assertFalse(bit8);
     }
+
+    @Test
+    public void should_get_last_bit_of_max_size_byte_array() {
+        // Setup
+        final MutableByteArray byteArray = new MutableByteArray(ByteArray.MAX_BYTE_COUNT);
+        final int byteIndex = (ByteArray.MAX_BYTE_COUNT - 1);
+        byteArray.set(byteIndex, (byte) 0xFF);
+
+        // Action
+        byteArray.setBit((byteIndex * 8L) + 6L, false);
+        byteArray.setBit((byteIndex * 8L) + 7L, false);
+
+        final byte b0 = byteArray.getByte(byteIndex);
+        final boolean bit7 = byteArray.getBit((byteIndex * 8L) + 6L);
+        final boolean bit8 = byteArray.getBit((byteIndex * 8L) + 7L);
+
+        // Assert
+        Assert.assertEquals((byte) 0b11111100, b0);
+        Assert.assertFalse(bit7);
+        Assert.assertFalse(bit8);
+    }
 }

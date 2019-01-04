@@ -3,6 +3,8 @@ package com.softwareverde.constable.bytearray;
 import com.softwareverde.constable.Constable;
 
 public interface ByteArray extends Constable<ImmutableByteArray> {
+    Integer MAX_BYTE_COUNT = (Integer.MAX_VALUE - 5);
+
     byte getByte(int index) throws IndexOutOfBoundsException;
     byte[] getBytes(int index, int byteCount) throws IndexOutOfBoundsException;
     byte[] getBytes();
@@ -18,7 +20,7 @@ public interface ByteArray extends Constable<ImmutableByteArray> {
      *      Ex: [ 0x00000000, 0x80000000 ] only has its 8th bit set.
      *  If the index is out of bounds, an IndexOutOfBoundsException is thrown.
      */
-    boolean getBit(int index) throws IndexOutOfBoundsException;
+    boolean getBit(long index) throws IndexOutOfBoundsException;
 
     @Override
     ImmutableByteArray asConst();
