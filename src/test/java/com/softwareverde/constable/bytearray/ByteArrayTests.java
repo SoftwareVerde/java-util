@@ -1,5 +1,6 @@
 package com.softwareverde.constable.bytearray;
 
+import com.softwareverde.util.ByteUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -229,5 +230,71 @@ public class ByteArrayTests {
         Assert.assertEquals((byte) 0b11111100, b0);
         Assert.assertFalse(bit7);
         Assert.assertFalse(bit8);
+    }
+
+    @Test
+    public void getBytes_should_get_last_byte_of_byte_array() {
+        // Setup
+        final MutableByteArray byteArray = new MutableByteArray(1);
+        byteArray.set(0, (byte) 0xFF);
+
+        // Action
+        final byte[] bytes = byteArray.getBytes(0, 1);
+
+        // Assert
+        Assert.assertTrue(ByteUtil.areEqual(new byte[] { (byte) 0xFF }, bytes));
+    }
+
+    @Test
+    public void getBytes_should_throw_when_getting_bytes_past_end_of_byte_array() {
+        // Setup
+        final MutableByteArray byteArray = new MutableByteArray(1);
+        byteArray.set(0, (byte) 0xFF);
+
+        // Action
+        byte[] bytes = null;
+        Exception exception = null;
+        try {
+            bytes = byteArray.getBytes(0, 2);
+        }
+        catch (final Exception thrownException) {
+            exception = thrownException;
+        }
+
+        // Assert
+        Assert.assertTrue(exception instanceof IndexOutOfBoundsException);
+        Assert.assertNull(bytes);
+    }
+
+    @Test
+    public void immutable_getBytes_should_get_last_byte_of_byte_array() {
+        // Setup
+        final ImmutableByteArray byteArray = new ImmutableByteArray(new byte[]{ (byte) 0xFF });
+
+        // Action
+        final byte[] bytes = byteArray.getBytes(0, 1);
+
+        // Assert
+        Assert.assertTrue(ByteUtil.areEqual(new byte[] { (byte) 0xFF }, bytes));
+    }
+
+    @Test
+    public void immutable_getBytes_should_throw_when_getting_bytes_past_end_of_byte_array() {
+        // Setup
+        final ImmutableByteArray byteArray = new ImmutableByteArray(new byte[]{ (byte) 0xFF });
+
+        // Action
+        byte[] bytes = null;
+        Exception exception = null;
+        try {
+            bytes = byteArray.getBytes(0, 2);
+        }
+        catch (final Exception thrownException) {
+            exception = thrownException;
+        }
+
+        // Assert
+        Assert.assertTrue(exception instanceof IndexOutOfBoundsException);
+        Assert.assertNull(bytes);
     }
 }

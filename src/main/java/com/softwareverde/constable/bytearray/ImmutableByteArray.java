@@ -49,7 +49,7 @@ public class ImmutableByteArray implements ByteArray, Const {
 
     @Override
     public byte[] getBytes(final int index, final int byteCount) throws IndexOutOfBoundsException {
-        if (index + byteCount >= _bytes.length) { throw new IndexOutOfBoundsException(); }
+        if (index + byteCount > _bytes.length) { throw new IndexOutOfBoundsException(); }
 
         final byte[] bytes = new byte[byteCount];
         for (int i=0; i<byteCount; ++i) {
