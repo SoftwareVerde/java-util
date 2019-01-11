@@ -128,4 +128,10 @@ public class ByteUtil {
         }
         return true;
     }
+
+    public static void cleanByteArray(final byte[] bytes) {
+        for (int i = 0; i < bytes.length; i += 1) {
+            bytes[i] = 0x00;
+        }
+    }
 }
