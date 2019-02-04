@@ -5,10 +5,12 @@ import com.softwareverde.util.HexUtil;
 
 public class MutableByteArray implements ByteArray {
     public static MutableByteArray wrap(final byte[] bytes) {
+        if (bytes == null) { return null; }
         return new MutableByteArray(bytes);
     }
 
     public static MutableByteArray copyOf(final byte[] bytes) {
+        if (bytes == null) { return null; }
         return new MutableByteArray(ByteUtil.copyBytes(bytes));
     }
 
