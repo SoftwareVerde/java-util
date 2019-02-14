@@ -6,52 +6,61 @@ import java.io.*;
 
 public class IoUtil {
 
-    private static byte[] _readStream(final InputStream inputStream) throws IOException {
-        final byte[] bytes;
-
+    /**
+     * Reads the stream until EOF and returns the raw bytes from the stream.
+     *  Unlike other functions in this class, the inputStream is NOT closed at the end of the call.
+     *  On error, the exception is thrown.
+     */
+    protected static byte[] _readStreamOrThrow(final InputStream inputStream) throws IOException {
         try (final ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-            int nRead;
-            byte[] readBuffer = new byte[1024];
-            while ((nRead = inputStream.read(readBuffer, 0, readBuffer.length)) != -1) {
-                buffer.write(readBuffer, 0, nRead);
+            int readByteCount;
+            final byte[] readBuffer = new byte[1024];
+            while ((readByteCount = inputStream.read(readBuffer, 0, readBuffer.length)) != -1) {
+                buffer.write(readBuffer, 0, readByteCount);
             }
-
             buffer.flush();
-            bytes = buffer.toByteArray();
+            return buffer.toByteArray();
         }
-
-        return bytes;
     }
 
-    public static byte[] readStream(final InputStream inputStream) {
-        try {
-            return _readStream(inputStream);
+    /**
+     * Reads the stream until EOF and returns the raw bytes from the stream.
+     *  The inputStream is closed at the end of the call.
+     *  On error, the exception is thrown.
+     */
+    public static byte[] readStreamOrThrow(final InputStream paramInputStream) throws IOException {
+        try (final InputStream inputStream = paramInputStream) {
+            return _readStreamOrThrow(inputStream);
+        }
+    }
+
+    /**
+     * Reads the stream until EOF and returns the raw bytes from the stream.
+     *  The inputStream is closed at the end of the call.
+     *  On error, null is returned.
+     */
+    public static byte[] readStream(final InputStream paramInputStream) {
+        try (final InputStream inputStream = paramInputStream) {
+            return _readStreamOrThrow(inputStream);
         }
         catch (final Exception exception) {
             Log.error("Unable to read stream", exception);
             return null;
         }
-        finally {
-            try {
-                inputStream.close();
-            }
-            catch (final IOException ioException) { }
-        }
     }
 
-    public static String streamToString(final InputStream inputStream) {
-        try {
-            return new String(IoUtil._readStream(inputStream), "UTF-8");
+    /**
+     * Reads inputStream until EOF and converts its contents as a UTF8 String.
+     *  The inputStream is closed at the end of the call.
+     *  On error, null is returned.
+     */
+    public static String streamToString(final InputStream paramInputStream) {
+        try (final InputStream inputStream = paramInputStream) {
+            return new String(_readStreamOrThrow(inputStream), "UTF-8");
         }
         catch (final Exception exception) {
             Log.error("Unable to read stream", exception);
             return null;
-        }
-        finally {
-            try {
-                inputStream.close();
-            }
-            catch (final IOException exception) { }
         }
     }
 
@@ -68,7 +77,7 @@ public class IoUtil {
 
     public static byte[] getFileContents(final File file) {
         try (final InputStream inputStream = new FileInputStream(file)) {
-            return IoUtil._readStream(inputStream);
+            return _readStreamOrThrow(inputStream);
         }
         catch (final Exception exception) {
             Log.error("Unable to read file contents", exception);
