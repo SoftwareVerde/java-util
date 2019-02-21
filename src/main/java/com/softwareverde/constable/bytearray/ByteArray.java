@@ -1,9 +1,17 @@
 package com.softwareverde.constable.bytearray;
 
 import com.softwareverde.constable.Constable;
+import com.softwareverde.util.HexUtil;
 
 public interface ByteArray extends Constable<ImmutableByteArray> {
     Integer MAX_BYTE_COUNT = (Integer.MAX_VALUE - 5);
+
+    static ImmutableByteArray fromHexString(final String hexString) {
+        final byte[] bytes = HexUtil.hexStringToByteArray(hexString);
+        if (bytes == null) { return null; }
+
+        return new ImmutableByteArray(bytes);
+    }
 
     byte getByte(int index) throws IndexOutOfBoundsException;
     byte[] getBytes(int index, int byteCount) throws IndexOutOfBoundsException;
