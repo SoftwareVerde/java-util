@@ -64,14 +64,15 @@ public class ReflectionUtil {
 
     @SuppressWarnings("unchecked")
     public static <T> T invoke(final Object object, final String methodName, final Object... params) {
-        RuntimeException lastException = null;
+        int paramCount = (params != null ? params.length : 0);
 
-        final Class[] parameterTypes = new Class[params.length];
-        for (int i=0; i<params.length; ++i) {
+        final Class[] parameterTypes = new Class[paramCount];
+        for (int i=0; i<paramCount; ++i) {
             final Object param = params[i];
             parameterTypes[i] = param.getClass();
         }
 
+        RuntimeException lastException;
         Class<?> clazz = object.getClass();
         do {
             try {

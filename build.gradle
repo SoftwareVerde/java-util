@@ -1,9 +1,9 @@
 group 'com.softwareverde'
-version '1.2.9'
+version '1.3.0'
 
 apply plugin: 'java'
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 
 task makeJar(type: Jar) {
     manifest {
@@ -21,6 +21,7 @@ repositories {
 
 dependencies {
     compile     group: 'com.github.softwareverde',  name: 'java-logging',   version: 'v0.0.2'
+    compile     group: 'com.github.softwareverde',  name: 'java-constable', version: 'v0.4.3'
 
     testCompile group: 'junit',                     name: 'junit',          version: '4.11'
     testCompile group: 'com.github.softwareverde',  name: 'java-constable', version: 'v0.3.4'
