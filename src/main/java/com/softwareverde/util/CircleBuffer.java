@@ -1,6 +1,10 @@
 package com.softwareverde.util;
 
-public class CircleBuffer<T> {
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class CircleBuffer<T> implements Iterable<T> {
     protected final T[] _items;
     protected int _writeIndex;
     protected int _readIndex;
@@ -38,11 +42,67 @@ public class CircleBuffer<T> {
         return _items[index];
     }
 
+    public synchronized T get(final int i) {
+        if ((_readIndex + i) >= _writeIndex) { return null; }
+
+        final int index = ((_readIndex + i) % _items.length);
+        return _items[index];
+    }
+
+    @Override
+    public synchronized Iterator<T> iterator() {
+        return new ImmutableCircleBufferIterator<T>(this);
+    }
+
     public synchronized int getItemCount() {
         return (_writeIndex - _readIndex);
     }
 
     public int getMaxItemCount() {
         return _items.length;
+    }
+}
+
+class ImmutableCircleBufferIterator<T> implements Iterator<T> {
+    private final CircleBuffer<T> _items;
+    private final int _originalWriteIndex;
+    private int _index;
+
+    protected void _assertNoConcurrentModification() {
+        if (_items._writeIndex != _originalWriteIndex) { throw new ConcurrentModificationException(); }
+    }
+
+    public ImmutableCircleBufferIterator(final CircleBuffer<T> items) {
+        _items = items;
+        _index = 0;
+        _originalWriteIndex = items._writeIndex;
+    }
+
+    @Override
+    public boolean hasNext() {
+        _assertNoConcurrentModification();
+
+        return (_index < _items.getItemCount());
+    }
+
+    @Override
+    public T next() {
+        _assertNoConcurrentModification();
+
+        if (! (_index < _items.getItemCount())) {
+            throw new NoSuchElementException();
+        }
+
+        final T item = _items.get(_index);
+        _index += 1;
+
+        return item;
+    }
+
+    @Override
+    public void remove() {
+        _assertNoConcurrentModification();
+
+        throw new UnsupportedOperationException();
     }
 }

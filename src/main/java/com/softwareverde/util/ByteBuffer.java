@@ -91,8 +91,6 @@ public class ByteBuffer {
      *      therefore, it is important that any byte[] fed into appendBytes() is not used again outside of this invocation.
      *  - byteBuffer may be kept in memory indefinitely and recycled via getRecycledBuffer().
      *  - byteCount is used to specify the endIndex of byteBuffer.
-     *  - if byteBuffer's bytes begin with ProtocolMessage.MAIN_NET_MAGIC_NUMBER, then the previous non-message packets
-     *      are assumed to be corrupted, and are discarded.
      */
     public void appendBytes(final byte[] byteBuffer, final int byteCount) {
         // if (byteCount > bytes.length) { throw new RuntimeException("Invalid byteCount. Attempted to add more bytes than was available within byte array."); }
