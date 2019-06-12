@@ -9,7 +9,7 @@ import java.text.ParseException;
 public class NumberFormatter {
     protected static final ThreadLocal<NumberFormat> _threadLocalNumberFormat = new ThreadLocal<NumberFormat>();
 
-    private NumberFormat _getNumberFormat() {
+    protected NumberFormat _getNumberFormat() {
         final NumberFormat numberFormat = _threadLocalNumberFormat.get();
         if (numberFormat != null) {
             return numberFormat;

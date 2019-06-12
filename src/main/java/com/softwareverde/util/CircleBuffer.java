@@ -64,9 +64,9 @@ public class CircleBuffer<T> implements Iterable<T> {
 }
 
 class ImmutableCircleBufferIterator<T> implements Iterator<T> {
-    private final CircleBuffer<T> _items;
-    private final int _originalWriteIndex;
-    private int _index;
+    protected final CircleBuffer<T> _items;
+    protected final int _originalWriteIndex;
+    protected int _index;
 
     protected void _assertNoConcurrentModification() {
         if (_items._writeIndex != _originalWriteIndex) { throw new ConcurrentModificationException(); }

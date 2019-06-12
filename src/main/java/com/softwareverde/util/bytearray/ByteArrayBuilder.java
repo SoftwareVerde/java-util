@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ByteArrayBuilder {
-    private final List<byte[]> _byteArrays = new ArrayList<byte[]>();
-    private Integer _totalByteCount = 0;
+    protected final List<byte[]> _byteArrays = new ArrayList<byte[]>();
+    protected Integer _totalByteCount = 0;
 
     protected void _appendBytes(final byte[] bytes, final Endian endian) {
         if (bytes.length == 0) { return; }
 
         final byte[] copiedBytes = new byte[bytes.length];
-        for (int i=0; i<bytes.length; ++i) {
+        for (int i = 0; i < bytes.length; ++i) {
             final int readIndex = ( (endian == Endian.BIG) ? (i) : ((bytes.length - i) - 1) );
             copiedBytes[i] = bytes[readIndex];
         }
