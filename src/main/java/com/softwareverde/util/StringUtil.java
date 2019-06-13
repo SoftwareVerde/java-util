@@ -43,6 +43,21 @@ public class StringUtil {
         return _numberFormatter.format(number);
     }
 
+    public static String formatNumberString(final Long number) {
+        if (number == null) { return null; }
+        return _numberFormatter.format(number);
+    }
+
+    public static String formatNumberString(final Float number) {
+        if (number == null) { return null; }
+        return _numberFormatter.format(number);
+    }
+
+    public static String formatNumberString(final Double number) {
+        if (number == null) { return null; }
+        return _numberFormatter.format(number);
+    }
+
     /**
      * Returns a formatted string with 2 decimal-places and a percent sign.
      *  Numbers are not formatted with commas.
