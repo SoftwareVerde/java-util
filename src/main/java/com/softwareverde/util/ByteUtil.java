@@ -1,5 +1,8 @@
 package com.softwareverde.util;
 
+import com.softwareverde.constable.bytearray.ByteArray;
+import com.softwareverde.constable.bytearray.MutableByteArray;
+
 public class ByteUtil {
     public static class Unit {
         public static final Long BYTES      =          0x01L;
@@ -7,6 +10,56 @@ public class ByteUtil {
         public static final Long MEGABYTES  =      0x100000L;
         public static final Long GIGABYTES  =    0x40000000L;
         public static final Long TERABYTES  = 0x10000000000L;
+    }
+
+    protected static long _bytesToLong(final int nativeByteCount, final ByteArray bytes) {
+        final int byteCount = bytes.getByteCount();
+        long value = 0;
+        for (int i = 0; i < nativeByteCount; ++i) {
+            final byte b = (byteCount + i < nativeByteCount ? 0x00 : bytes.getByte(byteCount - nativeByteCount + i));
+            value |= (b & 0xFF);
+            if (i < (nativeByteCount - 1)) {
+                value <<= 8;
+            }
+        }
+        return value;
+    }
+
+    protected static byte[] _reverseEndian(final ByteArray bytes) {
+        final int byteCount = bytes.getByteCount();
+        final byte[] reversedBytes = new byte[byteCount];
+        for (int i = 0; i < byteCount; ++i) {
+            reversedBytes[i] = bytes.getByte((byteCount - 1) - i);
+        }
+        return reversedBytes;
+    }
+
+    protected static byte[] _copyBytes(final ByteArray bytes) {
+        final int byteCount = bytes.getByteCount();
+        final byte[] copiedBytes = new byte[byteCount];
+        for (int i = 0; i < byteCount; ++i) {
+            copiedBytes[i] = bytes.getByte(i);
+        }
+        return copiedBytes;
+    }
+
+    protected static byte[] _copyBytes(final ByteArray bytes, final int startIndex, final int byteCount) {
+        final int bytesByteCount = bytes.getByteCount();
+        final byte[] copiedBytes = new byte[byteCount];
+        for (int i = 0; i < copiedBytes.length; ++i) {
+            copiedBytes[i] = ((startIndex + i) < bytesByteCount ? bytes.getByte(startIndex + i) : 0x00);
+        }
+        return copiedBytes;
+    }
+
+    protected static void _setBytes(final MutableByteArray destination, final ByteArray value, final int offset) {
+        final int destinationByteCount = destination.getByteCount();
+        final int valueByteCount = value.getByteCount();
+        for (int i = 0; (i + offset) < destinationByteCount; ++i) {
+            final int index = (i + offset);
+            final byte byteValue = (i < valueByteCount ? value.getByte(i) : 0x00);
+            destination.set(index, byteValue);
+        }
     }
 
     public static byte[] integerToBytes(final int value) {
@@ -19,19 +72,7 @@ public class ByteUtil {
     }
 
     public static byte[] integerToBytes(final long value) {
-        return integerToBytes((int) value);
-    }
-
-    private static long _bytesToLong(final int nativeByteCount, final byte[] bytes) {
-        long value = 0;
-        for (int i=0; i<nativeByteCount; ++i) {
-            final byte b = (bytes.length + i < nativeByteCount ? 0x00 : bytes[bytes.length - nativeByteCount + i]);
-            value |= (b & 0xFF);
-            if (i < (nativeByteCount - 1)) {
-                value <<= 8;
-            }
-        }
-        return value;
+        return ByteUtil.integerToBytes((int) value);
     }
 
     public static long byteToLong(final byte value) {
@@ -52,6 +93,10 @@ public class ByteUtil {
      *      10 00 00 00 -&gt; 268435456
      */
     public static long bytesToLong(final byte[] bytes) {
+        return _bytesToLong(8, MutableByteArray.wrap(bytes));
+    }
+
+    public static long bytesToLong(final ByteArray bytes) {
         return _bytesToLong(8, bytes);
     }
 
@@ -65,6 +110,10 @@ public class ByteUtil {
      *      10 00 00 00 -&gt; 268435456
      */
     public static int bytesToInteger(final byte[] bytes) {
+        return (int) _bytesToLong(4, MutableByteArray.wrap(bytes));
+    }
+
+    public static int bytesToInteger(final ByteArray bytes) {
         return (int) _bytesToLong(4, bytes);
     }
 
@@ -86,42 +135,48 @@ public class ByteUtil {
     }
 
     public static byte[] reverseEndian(final byte[] bytes) {
-        final byte[] reversedBytes = new byte[bytes.length];
-        for (int i=0; i<bytes.length; ++i) {
-            reversedBytes[i] = bytes[(bytes.length - 1) - i];
-        }
-        return reversedBytes;
+        return _reverseEndian(MutableByteArray.wrap(bytes));
+    }
+
+    public static byte[] reverseEndian(final ByteArray bytes) {
+        return _reverseEndian(bytes);
     }
 
     public static byte[] copyBytes(final byte[] bytes) {
-        final byte[] copiedBytes = new byte[bytes.length];
-        for (int i=0; i<bytes.length; ++i) {
-            copiedBytes[i] = bytes[i];
-        }
-        return copiedBytes;
+        return _copyBytes(MutableByteArray.wrap(bytes));
+    }
+
+    public static byte[] copyBytes(final ByteArray bytes) {
+        return _copyBytes(bytes);
     }
 
     public static byte[] copyBytes(final byte[] bytes, final int startIndex, final int byteCount) {
-        final byte[] copiedBytes = new byte[byteCount];
-        for (int i=0; i<copiedBytes.length; ++i) {
-            copiedBytes[i] = ((startIndex + i) < bytes.length ? bytes[startIndex + i] : 0x00);
-        }
-        return copiedBytes;
+        return _copyBytes(MutableByteArray.wrap(bytes), startIndex, byteCount);
+    }
+
+    public static byte[] copyBytes(final ByteArray bytes, final int startIndex, final int byteCount) {
+        return _copyBytes(bytes, startIndex, byteCount);
     }
 
     public static void setBytes(final byte[] destination, final byte[] value, final int offset) {
-        for (int i=0; (i+offset)<destination.length; ++i) {
-            destination[i + offset] = (i < value.length ? value[i] : 0x00);
-        }
+        _setBytes(MutableByteArray.wrap(destination), MutableByteArray.wrap(value), offset);
     }
 
     public static void setBytes(final byte[] destination, final byte[] value) {
-        ByteUtil.setBytes(destination, value, 0);
+        _setBytes(MutableByteArray.wrap(destination), MutableByteArray.wrap(value), 0);
+    }
+
+    public static void setBytes(final MutableByteArray destination, final ByteArray value, final int offset) {
+        _setBytes(destination, value, offset);
+    }
+
+    public static void setBytes(final MutableByteArray destination, final ByteArray value) {
+        _setBytes(destination, value, 0);
     }
 
     public static Boolean areEqual(final byte[] bytes0, final byte[] bytes1) {
         if (bytes0.length != bytes1.length) { return false; }
-        for (int i=0; i<bytes0.length; ++i) {
+        for (int i = 0; i < bytes0.length; ++i) {
             final byte b0 = bytes0[i];
             final byte b1 = bytes1[i];
             if (b0 != b1) { return false; }
@@ -130,8 +185,17 @@ public class ByteUtil {
     }
 
     public static void cleanByteArray(final byte[] bytes) {
-        for (int i = 0; i < bytes.length; i += 1) {
+        for (int i = 0; i < bytes.length; ++i) {
             bytes[i] = 0x00;
+        }
+    }
+
+    public static void cleanByteArray(final MutableByteArray bytes) {
+        final int byteCount = bytes.getByteCount();
+        final byte zero = 0x00;
+
+        for (int i = 0; i < byteCount; ++i) {
+            bytes.set(i, zero);
         }
     }
 }

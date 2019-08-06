@@ -53,9 +53,15 @@ public class StringUtilTests {
         // Setup
 
         // Action
-        final String numberString = StringUtil.formatNumberString(null);
+        final String integerNumberString = StringUtil.formatNumberString((Integer) null);
+        final String longNumberString = StringUtil.formatNumberString((Long) null);
+        final String floatNumberString = StringUtil.formatNumberString((Float) null);
+        final String doubleNumberString = StringUtil.formatNumberString((Double) null);
 
         // Assert
-        Assert.assertEquals(null, numberString);
+        Assert.assertEquals(null, integerNumberString);
+        Assert.assertEquals(null, longNumberString);
+        Assert.assertEquals(null, floatNumberString);
+        Assert.assertEquals(null, doubleNumberString);
     }
 }
