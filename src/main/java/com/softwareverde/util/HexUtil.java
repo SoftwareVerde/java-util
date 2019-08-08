@@ -1,6 +1,6 @@
 package com.softwareverde.util;
 
-import com.softwareverde.logging.Log;
+import com.softwareverde.logging.Logger;
 
 public class HexUtil {
     private final static char[] HEX_ALPHABET = "0123456789ABCDEF".toCharArray();
@@ -30,7 +30,7 @@ public class HexUtil {
             final int firstDigit = Character.digit(hexString.charAt(i), 16);
             final int secondDigit = Character.digit(hexString.charAt(i+1), 16);
             if (firstDigit == -1 || secondDigit == -1) {
-                Log.error("Invalid hexadecimal string: " + hexString);
+                Logger.warn("Invalid hexadecimal string: " + hexString);
                 return null;
             }
             data[i/2] = (byte) ((firstDigit << 4) + secondDigit);

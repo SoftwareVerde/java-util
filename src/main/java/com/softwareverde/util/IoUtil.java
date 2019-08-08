@@ -1,6 +1,6 @@
 package com.softwareverde.util;
 
-import com.softwareverde.logging.Log;
+import com.softwareverde.logging.Logger;
 
 import java.io.*;
 
@@ -44,7 +44,7 @@ public class IoUtil {
             return _readStreamOrThrow(inputStream);
         }
         catch (final Exception exception) {
-            Log.error("Unable to read stream", exception);
+            Logger.warn("Unable to read stream.", exception);
             return null;
         }
     }
@@ -59,7 +59,7 @@ public class IoUtil {
             return new String(_readStreamOrThrow(inputStream), "UTF-8");
         }
         catch (final Exception exception) {
-            Log.error("Unable to read stream", exception);
+            Logger.warn("Unable to read stream.", exception);
             return null;
         }
     }
@@ -80,7 +80,7 @@ public class IoUtil {
             return _readStreamOrThrow(inputStream);
         }
         catch (final Exception exception) {
-            Log.error("Unable to read file contents", exception);
+            Logger.warn("Unable to read file contents.", exception);
             return null;
         }
     }
@@ -92,7 +92,7 @@ public class IoUtil {
             return true;
         }
         catch (final Exception exception) {
-            Log.error("Unable to read file contents", exception);
+            Logger.warn("Unable to read file contents.", exception);
             return false;
         }
     }

@@ -1,6 +1,6 @@
 package com.softwareverde.util;
 
-import com.softwareverde.logging.Log;
+import com.softwareverde.logging.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -96,8 +96,8 @@ public class DateUtil {
             dateFormat.setTimeZone(timeZone);
             return dateFormat.parse(datetime);
         }
-        catch (final Exception e) {
-            Log.error("Invalid datetime string: "+ datetime, e);
+        catch (final Exception exception) {
+            Logger.warn("Invalid datetime string: "+ datetime, exception);
             return null;
         }
     }

@@ -1,6 +1,6 @@
 package com.softwareverde.util;
 
-import com.softwareverde.logging.Log;
+import com.softwareverde.logging.Logger;
 import com.softwareverde.util.numberformat.NumberFormatter;
 
 import java.util.*;
@@ -14,8 +14,8 @@ public class Util {
         try {
             return _numberFormatter.parse(numberString.trim()).intValue();
         }
-        catch (final Exception e) {
-            Log.warn("Invalid integer string: " + numberString, e);
+        catch (final Exception exception) {
+            Logger.warn("Invalid integer string: " + numberString, exception);
             return 0;
         }
     }
@@ -31,8 +31,8 @@ public class Util {
         try {
             return _numberFormatter.parse(numberString.trim()).longValue();
         }
-        catch (final Exception e) {
-            Log.warn("Invalid long string: " + numberString, e);
+        catch (final Exception exception) {
+            Logger.warn("Invalid long string: " + numberString, exception);
             return 0L;
         }
     }
@@ -48,8 +48,8 @@ public class Util {
         try {
             return _numberFormatter.parse(numberString.trim()).floatValue();
         }
-        catch (final Exception e) {
-            Log.warn("Invalid float string: " + numberString, e);
+        catch (final Exception exception) {
+            Logger.warn("Invalid float string: " + numberString, exception);
             return 0.0F;
         }
     }
@@ -65,8 +65,8 @@ public class Util {
         try {
             return _numberFormatter.parse(numberString.trim()).doubleValue();
         }
-        catch (final Exception e) {
-            Log.warn("Invalid double string: " + numberString, e);
+        catch (final Exception exception) {
+            Logger.warn("Invalid double string: " + numberString, exception);
             return 0.0D;
         }
     }
