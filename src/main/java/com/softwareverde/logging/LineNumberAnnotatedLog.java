@@ -49,14 +49,16 @@ public class LineNumberAnnotatedLog extends AnnotatedLog {
     @Override
     protected String _getClassAnnotation(final Class<?> callingClass) {
         final Exception exception = new Exception();
-        final int backtraceIndex = 1;
+
+        final StackTraceManager stackTraceManager = new StackTraceManager();
+        final int backtraceIndex = stackTraceManager.getCallingDepth();
 
         final StackTraceElement[] stackTraceElements = exception.getStackTrace();
-        if (stackTraceElements.length == 0) {
+        if (backtraceIndex >= stackTraceElements.length) {
             return super._getClassAnnotation(callingClass);
         }
 
-        final StackTraceElement stackTraceElement = stackTraceElements[Math.min(backtraceIndex, stackTraceElements.length - 1)];
+        final StackTraceElement stackTraceElement = stackTraceElements[backtraceIndex];
         return stackTraceElement.getFileName() + ":" + stackTraceElement.getLineNumber();
     }
 
