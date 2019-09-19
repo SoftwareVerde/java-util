@@ -4,7 +4,6 @@ import com.softwareverde.logging.LineNumberAnnotatedLog;
 import com.softwareverde.logging.Log;
 import com.softwareverde.logging.LogLevel;
 import com.softwareverde.logging.Logger;
-import com.softwareverde.logging.log.AnnotatedLog;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

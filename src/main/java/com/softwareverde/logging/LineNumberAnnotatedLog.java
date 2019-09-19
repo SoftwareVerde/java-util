@@ -8,6 +8,8 @@ import com.softwareverde.util.DateUtil;
 import java.util.TimeZone;
 
 public class LineNumberAnnotatedLog extends AnnotatedLog {
+    protected static final StackTraceManager _stackTraceManager = new StackTraceManager();
+
     protected static final Object INSTANCE_MUTEX = new Object();
     protected static volatile LineNumberAnnotatedLog INSTANCE = null;
     public static LineNumberAnnotatedLog getInstance() {
@@ -50,8 +52,7 @@ public class LineNumberAnnotatedLog extends AnnotatedLog {
     protected String _getClassAnnotation(final Class<?> callingClass) {
         final Exception exception = new Exception();
 
-        final StackTraceManager stackTraceManager = new StackTraceManager();
-        final int backtraceIndex = stackTraceManager.getCallingDepth();
+        final int backtraceIndex = _stackTraceManager.getCallingDepth();
 
         final StackTraceElement[] stackTraceElements = exception.getStackTrace();
         if (backtraceIndex >= stackTraceElements.length) {
