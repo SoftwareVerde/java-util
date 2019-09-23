@@ -64,45 +64,47 @@ public class CircleBuffer<T> implements Iterable<T> {
 }
 
 class ImmutableCircleBufferIterator<T> implements Iterator<T> {
-    protected final CircleBuffer<T> _items;
+    protected final CircleBuffer<T> _circleBuffer;
     protected final int _originalWriteIndex;
     protected int _index;
 
     protected void _assertNoConcurrentModification() {
-        if (_items._writeIndex != _originalWriteIndex) { throw new ConcurrentModificationException(); }
+        if (_circleBuffer._writeIndex != _originalWriteIndex) { throw new ConcurrentModificationException(); }
     }
 
-    public ImmutableCircleBufferIterator(final CircleBuffer<T> items) {
-        _items = items;
+    public ImmutableCircleBufferIterator(final CircleBuffer<T> circleBuffer) {
+        _circleBuffer = circleBuffer;
         _index = 0;
-        _originalWriteIndex = items._writeIndex;
+        _originalWriteIndex = circleBuffer._writeIndex;
     }
 
     @Override
     public boolean hasNext() {
-        _assertNoConcurrentModification();
+        synchronized (_circleBuffer) {
+            _assertNoConcurrentModification();
 
-        return (_index < _items.getItemCount());
+            return (_index < _circleBuffer.getItemCount());
+        }
     }
 
     @Override
     public T next() {
-        _assertNoConcurrentModification();
+        synchronized (_circleBuffer) {
+            _assertNoConcurrentModification();
 
-        if (! (_index < _items.getItemCount())) {
-            throw new NoSuchElementException();
+            if (! (_index < _circleBuffer.getItemCount())) {
+                throw new NoSuchElementException();
+            }
+
+            final T item = _circleBuffer.get(_index);
+            _index += 1;
+
+            return item;
         }
-
-        final T item = _items.get(_index);
-        _index += 1;
-
-        return item;
     }
 
     @Override
     public void remove() {
-        _assertNoConcurrentModification();
-
         throw new UnsupportedOperationException();
     }
 }

@@ -16,7 +16,6 @@ import java.util.List;
 
 public class LineNumberAnnotatedLogTests {
     public static final LogLevel ORIGINAL_LOG_LEVEL = Logger.DEFAULT_LOG_LEVEL;
-    public static final Log ORIGINAL_LOG = Logger.LOG;
 
     public static class AnnotatedDebugLog extends LineNumberAnnotatedLog {
         protected static class ListWriter implements Writer {
@@ -57,14 +56,14 @@ public class LineNumberAnnotatedLogTests {
     @Before
     public void setUp() {
         Logger.DEFAULT_LOG_LEVEL = ORIGINAL_LOG_LEVEL;
-        Logger.LOG = ORIGINAL_LOG;
+        Logger.setLogFactory(Logger.DEFAULT_LOG_FACTORY);
         Logger.clearLogLevels();
     }
 
     @After
     public void tearDown() {
         Logger.DEFAULT_LOG_LEVEL = ORIGINAL_LOG_LEVEL;
-        Logger.LOG = ORIGINAL_LOG;
+        Logger.setLogFactory(Logger.DEFAULT_LOG_FACTORY);
         Logger.clearLogLevels();
     }
 
@@ -73,7 +72,7 @@ public class LineNumberAnnotatedLogTests {
         // Setup
         final AnnotatedDebugLog annotatedDebugLog = new AnnotatedDebugLog();
         Logger.DEFAULT_LOG_LEVEL = LogLevel.ON;
-        Logger.LOG = annotatedDebugLog;
+        Logger.setLog(annotatedDebugLog);
 
         // Action
         final int lineNumber = ((new Exception()).getStackTrace()[0].getLineNumber() + 1);
