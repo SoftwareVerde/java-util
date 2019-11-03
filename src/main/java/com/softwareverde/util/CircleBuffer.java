@@ -23,7 +23,7 @@ public class CircleBuffer<T> implements Iterable<T> {
         _readIndex = 0;
     }
 
-    public synchronized void pushItem(final T item) {
+    public synchronized void push(final T item) {
         final int index = (_writeIndex % _items.length);
         _items[index] = item;
 
@@ -34,7 +34,7 @@ public class CircleBuffer<T> implements Iterable<T> {
         }
     }
 
-    public synchronized T popItem() {
+    public synchronized T pop() {
         if (_readIndex >= _writeIndex) { return null; }
 
         final int index = (_readIndex % _items.length);
@@ -54,11 +54,11 @@ public class CircleBuffer<T> implements Iterable<T> {
         return new ImmutableCircleBufferIterator<T>(this);
     }
 
-    public synchronized int getItemCount() {
+    public synchronized int getCount() {
         return (_writeIndex - _readIndex);
     }
 
-    public int getMaxItemCount() {
+    public int getMaxCount() {
         return _items.length;
     }
 }
@@ -83,7 +83,7 @@ class ImmutableCircleBufferIterator<T> implements Iterator<T> {
         synchronized (_circleBuffer) {
             _assertNoConcurrentModification();
 
-            return (_index < _circleBuffer.getItemCount());
+            return (_index < _circleBuffer.getCount());
         }
     }
 
@@ -92,7 +92,7 @@ class ImmutableCircleBufferIterator<T> implements Iterator<T> {
         synchronized (_circleBuffer) {
             _assertNoConcurrentModification();
 
-            if (! (_index < _circleBuffer.getItemCount())) {
+            if (! (_index < _circleBuffer.getCount())) {
                 throw new NoSuchElementException();
             }
 

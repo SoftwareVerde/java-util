@@ -9,36 +9,36 @@ public class CircleBufferTests {
         final CircleBuffer<Integer> circleBuffer = new CircleBuffer<Integer>(4);
         Assert.assertNull(circleBuffer.get(0));
 
-        circleBuffer.pushItem(0);
+        circleBuffer.push(0);
 
         Assert.assertEquals(Integer.valueOf(0), circleBuffer.get(0));
 
-        circleBuffer.pushItem(1);
+        circleBuffer.push(1);
 
         Assert.assertEquals(Integer.valueOf(0), circleBuffer.get(0));
         Assert.assertEquals(Integer.valueOf(1), circleBuffer.get(1));
 
-        circleBuffer.pushItem(2);
+        circleBuffer.push(2);
 
         Assert.assertEquals(Integer.valueOf(0), circleBuffer.get(0));
         Assert.assertEquals(Integer.valueOf(1), circleBuffer.get(1));
         Assert.assertEquals(Integer.valueOf(2), circleBuffer.get(2));
 
-        circleBuffer.pushItem(3);
+        circleBuffer.push(3);
 
         Assert.assertEquals(Integer.valueOf(0), circleBuffer.get(0));
         Assert.assertEquals(Integer.valueOf(1), circleBuffer.get(1));
         Assert.assertEquals(Integer.valueOf(2), circleBuffer.get(2));
         Assert.assertEquals(Integer.valueOf(3), circleBuffer.get(3));
 
-        circleBuffer.pushItem(4);
+        circleBuffer.push(4);
 
         Assert.assertEquals(Integer.valueOf(1), circleBuffer.get(0));
         Assert.assertEquals(Integer.valueOf(2), circleBuffer.get(1));
         Assert.assertEquals(Integer.valueOf(3), circleBuffer.get(2));
         Assert.assertEquals(Integer.valueOf(4), circleBuffer.get(3));
 
-        final Integer poppedItem = circleBuffer.popItem();
+        final Integer poppedItem = circleBuffer.pop();
 
         Assert.assertEquals(Integer.valueOf(1), poppedItem);
         Assert.assertEquals(Integer.valueOf(2), circleBuffer.get(0));
