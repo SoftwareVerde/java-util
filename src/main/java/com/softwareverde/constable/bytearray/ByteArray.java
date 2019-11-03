@@ -25,7 +25,7 @@ public interface ByteArray extends Constable<ImmutableByteArray> {
      *  The first bit is the MSB within the byte at index 0.
      *      Ex: 0xFFFF0000 has the first bit set. Its last bit is not set.
      *  A ByteArray with multiple bytes accesses its bits sequentially.
-     *      Ex: [ 0x00000000, 0x80000000 ] only has its 8th bit set.
+     *      Ex: [ 0x00, 0x80 ] only has its 8th bit set.
      *  If the index is out of bounds, an IndexOutOfBoundsException is thrown.
      */
     boolean getBit(long index) throws IndexOutOfBoundsException;
