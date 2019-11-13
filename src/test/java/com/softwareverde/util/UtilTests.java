@@ -102,6 +102,78 @@ public class UtilTests {
     }
 
     @Test
+    public void parseBool_should_return_true_when_string_true() {
+        // Setup
+        final String stringValue = "true";
+
+        // Action
+        final Boolean booleanValue = Util.parseBool(stringValue);
+
+        // Assert
+        Assert.assertTrue(booleanValue);
+    }
+
+    @Test
+    public void parseBool_should_return_false_when_false() {
+        // Setup
+        final String stringValue = "false";
+
+        // Action
+        final Boolean booleanValue = Util.parseBool(stringValue);
+
+        // Assert
+        Assert.assertFalse(booleanValue);
+    }
+
+    @Test
+    public void parseBool_should_return_false_when_random_string() {
+        // Setup
+        final String stringValue = "abcd";
+
+        // Action
+        final Boolean booleanValue = Util.parseBool(stringValue);
+
+        // Assert
+        Assert.assertFalse(booleanValue);
+    }
+
+    @Test
+    public void parseBool_should_return_false_when_zero() {
+        // Setup
+        final String stringValue = "0";
+
+        // Action
+        final Boolean booleanValue = Util.parseBool(stringValue);
+
+        // Assert
+        Assert.assertFalse(booleanValue);
+    }
+
+    @Test
+    public void parseBool_should_return_true_when_positive_integer() {
+        // Setup
+        final String stringValue = "4";
+
+        // Action
+        final Boolean booleanValue = Util.parseBool(stringValue);
+
+        // Assert
+        Assert.assertTrue(booleanValue);
+    }
+
+    @Test
+    public void parseBool_should_return_false_when_negative_integer() {
+        // Setup
+        final String stringValue = "-4";
+
+        // Action
+        final Boolean booleanValue = Util.parseBool(stringValue);
+
+        // Assert
+        Assert.assertFalse(booleanValue);
+    }
+
+    @Test
     public void areEqual_returns_true_when_comparing_null_values() {
         // Setup
         final Object objectA = null;

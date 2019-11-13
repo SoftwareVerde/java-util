@@ -80,7 +80,7 @@ public class Util {
         if (stringValue == null) { return null; }
         final String trimmedStringValue = stringValue.trim();
         if (trimmedStringValue.equals("0")) { return false; }
-        if (Util.parseInt(trimmedStringValue) > 0) { return true; }
+        if (Util.parseInt(trimmedStringValue, 0) > 0) { return true; }
         return trimmedStringValue.equalsIgnoreCase("true");
     }
 
