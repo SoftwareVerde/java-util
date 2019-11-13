@@ -65,6 +65,16 @@ public class IoUtil {
     }
 
     /**
+     * Returns a stream to a file contained within the project's resources directory.
+     * @param filename  - The file name of the resource within the resources. It should be prefixed with a forward-slash.
+     * @return          - An input stream to the contents of the resource or null if it was not found.
+     */
+    public static InputStream getResourceAsStream(final String filename) {
+        final InputStream resourceStream = Util.class.getResourceAsStream(filename);
+        return resourceStream;
+    }
+
+    /**
      * Returns the content of a file contained within the project's resources directory.
      * @param filename  - The file name of the resource within the resources. It should be prefixed with a forward-slash.
      * @return          - The contents of the resource if found, otherwise an empty string.
