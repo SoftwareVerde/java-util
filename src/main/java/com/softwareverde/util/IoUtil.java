@@ -24,6 +24,45 @@ public class IoUtil {
     }
 
     /**
+     * Reads the stream until EOF or the expected length is reached.  This method is more memory-efficient than its
+     * sister method due to the fact that it only creates an array of the expected length (which the data is buffered into).
+     *  Unlike other functions in this class, the inputStream is NOT closed at the end of the call.
+     *  If EOF is reached before the expected length, an IOException is thrown.
+     *  On error, the exception is thrown.
+     */
+    public static byte[] _readStreamOrThrow(final InputStream inputStream, final long longLength) throws IOException {
+        if (longLength > Integer.MAX_VALUE) {
+            throw new IOException("Unable to read file with " + longLength + " bytes into a byte array.");
+        }
+
+        final int length = (int) longLength;
+        final byte[] data = new byte[length];
+
+        int startIndex = 0;
+        boolean shouldContinue = true;
+        while (shouldContinue) {
+            int bytesRead = inputStream.read(data, startIndex, length - startIndex);
+            startIndex += bytesRead;
+
+            if (bytesRead < 0) {
+                // EOF was reached
+                if (startIndex != length) {
+                    throw new IOException("Unable to read expected byte length from stream (expected: " + length + ", read: " + startIndex + ")");
+                }
+                shouldContinue = false;
+            }
+            if (bytesRead == 0) {
+                // reached expected length
+                if (inputStream.available() > 0 || inputStream.read() > 0) {
+                    throw new IOException("Additional data available beyond expected length of " + length);
+                }
+                shouldContinue = false;
+            }
+        }
+        return data;
+    }
+
+    /**
      * Reads the stream until EOF and returns the raw bytes from the stream.
      *  The inputStream is closed at the end of the call.
      *  On error, the exception is thrown.
@@ -34,6 +73,11 @@ public class IoUtil {
         }
     }
 
+    public static byte[] readStreamOrThrow(final InputStream paramInputStream, final long expectedLength) throws IOException {
+        try (final InputStream inputStream = paramInputStream) {
+            return _readStreamOrThrow(inputStream, expectedLength);
+        }
+    }
     /**
      * Reads the stream until EOF and returns the raw bytes from the stream.
      *  The inputStream is closed at the end of the call.
@@ -87,7 +131,7 @@ public class IoUtil {
 
     public static byte[] getFileContents(final File file) {
         try (final InputStream inputStream = new FileInputStream(file)) {
-            return _readStreamOrThrow(inputStream);
+            return _readStreamOrThrow(inputStream, file.length());
         }
         catch (final Exception exception) {
             Logger.warn("Unable to read file contents.", exception);
@@ -96,13 +140,18 @@ public class IoUtil {
     }
 
     public static Boolean putFileContents(final String filename, final byte[] bytes) {
-        try (final OutputStream outputStream = new FileOutputStream(filename)) {
+        final File file = new File(filename);
+        return IoUtil.putFileContents(file, bytes);
+    }
+
+    public static Boolean putFileContents(final File file, final byte[] bytes) {
+        try (final OutputStream outputStream = new FileOutputStream(file)) {
             outputStream.write(bytes);
             outputStream.flush();
             return true;
         }
         catch (final Exception exception) {
-            Logger.warn("Unable to read file contents.", exception);
+            Logger.warn("Unable to write file contents.", exception);
             return false;
         }
     }
