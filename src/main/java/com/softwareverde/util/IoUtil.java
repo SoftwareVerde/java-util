@@ -27,10 +27,10 @@ public class IoUtil {
      * Reads the stream until EOF or the expected length is reached.  This method is more memory-efficient than its
      * sister method due to the fact that it only creates an array of the expected length (which the data is buffered into).
      *  Unlike other functions in this class, the inputStream is NOT closed at the end of the call.
-     *  If EOF is reached before the expected length, an IOException is thrown.
+     *  If EOF is not reached at the expected length, an IOException is thrown.
      *  On error, the exception is thrown.
      */
-    public static byte[] _readStreamOrThrow(final InputStream inputStream, final long longLength) throws IOException {
+    protected static byte[] _readStreamOrThrow(final InputStream inputStream, final long longLength) throws IOException {
         if (longLength > Integer.MAX_VALUE) {
             throw new IOException("Unable to read file with " + longLength + " bytes into a byte array.");
         }
@@ -63,7 +63,7 @@ public class IoUtil {
     }
 
     /**
-     * Reads the stream until EOF and returns the raw bytes from the stream.
+     * Reads the stream until EOF or expected length and returns the raw bytes from the stream.
      *  The inputStream is closed at the end of the call.
      *  On error, the exception is thrown.
      */
@@ -73,11 +73,38 @@ public class IoUtil {
         }
     }
 
+    /**
+     * Reads the stream until EOF and returns the raw bytes from the stream.
+     *  This method is more memory-efficient than its sister method due to the fact that it only creates an array of the
+     *      expected length (which the data is buffered into).
+     *  The inputStream is closed at the end of the call.
+     *  If EOF is not reached at the expected length, an IOException is thrown.
+     *  On error, the exception is thrown.
+     */
     public static byte[] readStreamOrThrow(final InputStream paramInputStream, final long expectedLength) throws IOException {
         try (final InputStream inputStream = paramInputStream) {
             return _readStreamOrThrow(inputStream, expectedLength);
         }
     }
+
+    /**
+     * Attempts to fill the provided buffer with bytes from the specified stream.
+     *   Returns the number of bytes read; if this is less than the buffer length, it indicates that the stream ended
+     *      before the buffer could be filled.
+     *   On error, the exception is thrown.
+     * @param inputStream
+     * @param buffer
+     * @return
+     */
+    public static int readBytesFromStream(final InputStream inputStream, final byte[] buffer) throws IOException {
+        int readByteCount = 0;
+        int iterationByteCount;
+        while ((iterationByteCount = inputStream.read(buffer, readByteCount, buffer.length - readByteCount)) > 0) {
+            readByteCount += iterationByteCount;
+        }
+        return readByteCount;
+    }
+
     /**
      * Reads the stream until EOF and returns the raw bytes from the stream.
      *  The inputStream is closed at the end of the call.
