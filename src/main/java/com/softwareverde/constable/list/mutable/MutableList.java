@@ -74,6 +74,7 @@ public class MutableList<T> implements List<T> {
     }
 
     @Override
+    @Deprecated
     public int getSize() {
         return _items.size();
     }

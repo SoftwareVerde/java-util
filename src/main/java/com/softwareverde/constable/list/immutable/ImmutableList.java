@@ -40,6 +40,7 @@ public class ImmutableList<T> implements List<T>, Const {
     }
 
     @Override
+    @Deprecated
     public int getSize() {
         return _items.size();
     }
