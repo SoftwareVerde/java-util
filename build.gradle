@@ -1,5 +1,5 @@
 group 'com.softwareverde'
-version '2.0.6'
+version '2.0.7'
 
 apply plugin: 'java'
 apply plugin: 'java-library'
@@ -21,9 +21,9 @@ repositories {
 }
 
 dependencies {
-    implementation      group: 'com.github.softwareverde',  name: 'java-logging',   version: 'v2.0.2'
+    implementation      group: 'com.github.softwareverde',  name: 'java-logging',   version: 'v2.1.0'
 
-    testImplementation  group: 'junit',                     name: 'junit',          version: '4.11'
+    testImplementation  group: 'junit',                     name: 'junit',          version: '4.12'
 }
 
 test {
