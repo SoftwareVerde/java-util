@@ -4,14 +4,19 @@ import com.softwareverde.util.ByteUtil;
 import com.softwareverde.util.HexUtil;
 
 public class MutableByteArray implements ByteArray {
-    public static MutableByteArray wrap(final byte[] bytes) {
-        if (bytes == null) { return null; }
-        return new MutableByteArray(bytes);
+    public static MutableByteArray fromHexString(final String hexString) {
+        final byte[] bytes = HexUtil.hexStringToByteArray(hexString);
+        return MutableByteArray.wrap(bytes);
     }
 
     public static MutableByteArray copyOf(final byte[] bytes) {
         if (bytes == null) { return null; }
         return new MutableByteArray(ByteUtil.copyBytes(bytes));
+    }
+
+    public static MutableByteArray wrap(final byte[] bytes) {
+        if (bytes == null) { return null; }
+        return new MutableByteArray(bytes);
     }
 
     protected byte[] _bytes;
@@ -70,6 +75,16 @@ public class MutableByteArray implements ByteArray {
         ByteUtil.setBytes(_bytes, bytes);
     }
 
+    public void reverseEndian() {
+        for (int i = 0; i < (_bytes.length / 2); ++i) {
+            final int tailIndex = (_bytes.length - i - 1);
+            final byte b0 = _bytes[i];
+            final byte b1 = _bytes[tailIndex];
+            _bytes[i] = b1;
+            _bytes[tailIndex] = b0;
+        }
+    }
+
     @Override
     public byte getByte(final int index) throws IndexOutOfBoundsException {
         if (index >= _bytes.length) { throw new IndexOutOfBoundsException(); }
@@ -82,7 +97,7 @@ public class MutableByteArray implements ByteArray {
         final long byteIndex = (index >>> 3);
         if (byteIndex >= _bytes.length) { throw new IndexOutOfBoundsException(); }
 
-        return ImmutableByteArray._getBit(_bytes, index);
+        return ByteArrayCore.getBit(_bytes, index);
     }
 
     public void setBit(final long index, final boolean isSet) throws IndexOutOfBoundsException {
@@ -127,6 +142,11 @@ public class MutableByteArray implements ByteArray {
     @Override
     public byte[] getBytes() {
         return ByteUtil.copyBytes(_bytes);
+    }
+
+    @Override
+    public ByteArray toReverseEndian() {
+        return MutableByteArray.wrap(ByteUtil.reverseEndian(_bytes));
     }
 
     public byte[] unwrap() {

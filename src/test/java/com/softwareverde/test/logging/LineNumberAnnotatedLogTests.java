@@ -55,14 +55,14 @@ public class LineNumberAnnotatedLogTests {
 
     @Before
     public void setUp() {
-        Logger.DEFAULT_LOG_LEVEL = ORIGINAL_LOG_LEVEL;
+        Logger.setLogLevel(ORIGINAL_LOG_LEVEL);
         Logger.setLogFactory(Logger.DEFAULT_LOG_FACTORY);
         Logger.clearLogLevels();
     }
 
     @After
     public void tearDown() {
-        Logger.DEFAULT_LOG_LEVEL = ORIGINAL_LOG_LEVEL;
+        Logger.setLogLevel(ORIGINAL_LOG_LEVEL);
         Logger.setLogFactory(Logger.DEFAULT_LOG_FACTORY);
         Logger.clearLogLevels();
     }
@@ -71,7 +71,7 @@ public class LineNumberAnnotatedLogTests {
     public void should_log_calling_class() {
         // Setup
         final AnnotatedDebugLog annotatedDebugLog = new AnnotatedDebugLog();
-        Logger.DEFAULT_LOG_LEVEL = LogLevel.ON;
+        Logger.setLogLevel(LogLevel.ON);
         Logger.setLog(annotatedDebugLog);
 
         // Action

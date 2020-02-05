@@ -5,15 +5,24 @@ import com.softwareverde.util.ByteUtil;
 import com.softwareverde.util.HexUtil;
 
 public class ImmutableByteArray implements ByteArray, Const {
-    protected static boolean _getBit(final byte[] bytes, final long index) {
-        final int byteIndex = (int) (index >>> 3);
-        final byte b = bytes[byteIndex];
+    public static ImmutableByteArray fromHexString(final String hexString) {
+        final byte[] bytes = HexUtil.hexStringToByteArray(hexString);
+        if (bytes == null) { return null; }
 
-        final int bitMask = ( 0x01 << ( 7 - (0x07 & index) ) );
-        return ( (b & bitMask) != 0x00 );
+        return new ImmutableByteArray(bytes, false);
+    }
+
+    public static ImmutableByteArray copyOf(final byte[] bytes) {
+        if (bytes == null) { return null; }
+
+        return new ImmutableByteArray(bytes);
     }
 
     protected final byte[] _bytes;
+
+    protected ImmutableByteArray(final byte[] bytes, final Boolean copyBytes) {
+        _bytes = (copyBytes ? ByteUtil.copyBytes(bytes) : bytes);
+    }
 
     public ImmutableByteArray() {
         _bytes = new byte[0];
@@ -44,7 +53,7 @@ public class ImmutableByteArray implements ByteArray, Const {
         final long byteIndex = (index >>> 3);
         if (byteIndex >= _bytes.length) { throw new IndexOutOfBoundsException(); }
 
-        return _getBit(_bytes, index);
+        return ByteArrayCore.getBit(_bytes, index);
     }
 
     @Override
@@ -72,6 +81,11 @@ public class ImmutableByteArray implements ByteArray, Const {
     @Override
     public byte[] getBytes() {
         return ByteUtil.copyBytes(_bytes);
+    }
+
+    @Override
+    public ByteArray toReverseEndian() {
+        return new ImmutableByteArray(ByteUtil.reverseEndian(_bytes));
     }
 
     @Override

@@ -1,13 +1,16 @@
 package com.softwareverde.util.bytearray;
 
 import com.softwareverde.constable.bytearray.ByteArray;
+import com.softwareverde.constable.bytearray.ByteArrayCore;
+import com.softwareverde.constable.bytearray.ImmutableByteArray;
+import com.softwareverde.constable.bytearray.MutableByteArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ByteArrayBuilder {
+public class ByteArrayBuilder implements ByteArray {
     protected final List<byte[]> _byteArrays = new ArrayList<byte[]>();
-    protected Integer _totalByteCount = 0;
+    protected Long _totalByteCount = 0L;
 
     protected void _appendBytes(final byte[] bytes, final Endian endian) {
         if (bytes.length == 0) { return; }
@@ -25,6 +28,70 @@ public class ByteArrayBuilder {
     protected void _appendByte(final byte b) {
         _byteArrays.add(new byte[] { b });
         _totalByteCount += 1;
+    }
+
+    protected byte _getByte(final long index) {
+        if (index >= _totalByteCount) { throw new IndexOutOfBoundsException(); }
+
+        int bytesSkipped = 0;
+        for (final byte[] byteArray : _byteArrays) {
+            if ((index - bytesSkipped) >= byteArray.length) {
+                bytesSkipped += byteArray.length;
+                continue;
+            }
+
+            final int readIndex = (int) (index - bytesSkipped);
+            return byteArray[readIndex];
+        }
+
+        throw new IndexOutOfBoundsException();
+    }
+
+    public byte[] _getBytes(final long index, final int byteCount) throws IndexOutOfBoundsException {
+        final long endIndex = ((index + byteCount) - 1);
+        if (endIndex >= _totalByteCount) { throw new IndexOutOfBoundsException(); }
+
+        final byte[] byteBuffer = new byte[byteCount];
+
+        int bytesRemaining = byteCount;
+        int writeIndex = 0;
+        int bytesSkipped = 0;
+        for (final byte[] byteArray : _byteArrays) {
+            final long readIndexLong = (index - bytesSkipped);
+            if (readIndexLong >= byteArray.length) {
+                bytesSkipped += byteArray.length;
+                continue;
+            }
+
+            final int readIndex = (int) readIndexLong;
+            final int readByteCount = Math.min(bytesRemaining, (byteArray.length - readIndex));
+            System.arraycopy(byteArray, readIndex, byteBuffer, writeIndex, readByteCount);
+
+            bytesSkipped += readIndex;
+            writeIndex += readByteCount;
+            bytesRemaining -= readByteCount;
+
+            if (bytesRemaining < 1) {
+                return byteBuffer;
+            }
+        }
+
+        throw new IndexOutOfBoundsException();
+    }
+
+    protected byte[] _build() {
+        if (_totalByteCount > Integer.MAX_VALUE) { throw new RuntimeException("Byte count surpasses max byte[] size."); }
+        final byte[] data = new byte[_totalByteCount.intValue()];
+
+        int offset = 0;
+        for (final byte[] value : _byteArrays) {
+            for (int i = 0; i < value.length; ++i) {
+                data[offset + i] = value[i];
+            }
+            offset += value.length;
+        }
+
+        return data;
     }
 
     public void appendBytes(final byte[] bytes, final Endian endian) {
@@ -48,25 +115,70 @@ public class ByteArrayBuilder {
     }
 
     public byte[] build() {
-        final byte[] data = new byte[_totalByteCount];
-
-        int offset = 0;
-        for (final byte[] value : _byteArrays) {
-            for (int i = 0; i < value.length; ++i) {
-                data[offset + i] = value[i];
-            }
-            offset += value.length;
-        }
-
-        return data;
+        return _build();
     }
 
-    public Integer getByteCount() {
+    @Override
+    public byte getByte(final int index) throws IndexOutOfBoundsException {
+        return _getByte(index);
+    }
+
+    public byte getByte(final long index) throws IndexOutOfBoundsException {
+        return _getByte(index);
+    }
+
+    @Override
+    public byte[] getBytes(final int index, final int byteCount) throws IndexOutOfBoundsException {
+        return _getBytes(index, byteCount);
+    }
+
+    public byte[] getBytes(final long index, final int byteCount) throws IndexOutOfBoundsException {
+        return _getBytes(index, byteCount);
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return _build();
+    }
+
+    @Override
+    public ByteArray toReverseEndian() {
+        final MutableByteArray mutableByteArray = MutableByteArray.wrap(_build());
+        mutableByteArray.reverseEndian();
+        return mutableByteArray;
+    }
+
+    @Override
+    public int getByteCount() {
+        if (_totalByteCount > Integer.MAX_VALUE) { return -1; }
+        return _totalByteCount.intValue();
+    }
+
+    public long getLongByteCount() {
         return _totalByteCount;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return (_totalByteCount == 0);
+    }
+
+    @Override
+    public boolean getBit(final long index) throws IndexOutOfBoundsException {
+        final long byteIndex = (index >>> 3);
+        if (byteIndex >= _totalByteCount) { throw new IndexOutOfBoundsException(); }
+
+        final byte[] bytes = new byte[] { _getByte((int) byteIndex) };
+        return ByteArrayCore.getBit(bytes, (index - (byteIndex * 8)));
+    }
+
+    @Override
+    public ImmutableByteArray asConst() {
+        return new ImmutableByteArray(_build());
+    }
+
     public void clear() {
-        _totalByteCount = 0;
+        _totalByteCount = 0L;
         _byteArrays.clear();
     }
 }
