@@ -15,12 +15,12 @@ public class ImmutableListIterator<T> implements Iterator<T> {
 
     @Override
     public boolean hasNext() {
-        return (_index < _items.getSize());
+        return (_index < _items.getCount());
     }
 
     @Override
     public T next() {
-        if (! (_index < _items.getSize())) {
+        if (! (_index < _items.getCount())) {
             throw new NoSuchElementException();
         }
 

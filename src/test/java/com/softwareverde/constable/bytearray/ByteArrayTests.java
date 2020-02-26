@@ -121,7 +121,7 @@ public class ByteArrayTests {
     public void should_set_bits_0() {
         // Setup
         final MutableByteArray byteArray = new MutableByteArray(1);
-        byteArray.set(0, (byte) 0xFF);
+        byteArray.setByte(0, (byte) 0xFF);
 
         // Action
         byteArray.setBit(0, false);
@@ -138,7 +138,7 @@ public class ByteArrayTests {
     public void should_set_bits_1() {
         // Setup
         final MutableByteArray byteArray = new MutableByteArray(1);
-        byteArray.set(0, (byte) 0xFF);
+        byteArray.setByte(0, (byte) 0xFF);
 
         // Action
         byteArray.setBit(1, false);
@@ -155,7 +155,7 @@ public class ByteArrayTests {
     public void should_set_bits_7() {
         // Setup
         final MutableByteArray byteArray = new MutableByteArray(1);
-        byteArray.set(0, (byte) 0xFF);
+        byteArray.setByte(0, (byte) 0xFF);
 
         // Action
         byteArray.setBit(7, false);
@@ -172,8 +172,8 @@ public class ByteArrayTests {
     public void should_set_bits_8() {
         // Setup
         final MutableByteArray byteArray = new MutableByteArray(2);
-        byteArray.set(0, (byte) 0xFF);
-        byteArray.set(1, (byte) 0xFF);
+        byteArray.setByte(0, (byte) 0xFF);
+        byteArray.setByte(1, (byte) 0xFF);
 
         // Action
         byteArray.setBit(8, false);
@@ -192,8 +192,8 @@ public class ByteArrayTests {
     public void should_set_bits_7_8() {
         // Setup
         final MutableByteArray byteArray = new MutableByteArray(2);
-        byteArray.set(0, (byte) 0xFF);
-        byteArray.set(1, (byte) 0xFF);
+        byteArray.setByte(0, (byte) 0xFF);
+        byteArray.setByte(1, (byte) 0xFF);
 
         // Action
         byteArray.setBit(7, false);
@@ -216,7 +216,7 @@ public class ByteArrayTests {
         // Setup
         final MutableByteArray byteArray = new MutableByteArray(ByteArray.MAX_BYTE_COUNT);
         final int byteIndex = (ByteArray.MAX_BYTE_COUNT - 1);
-        byteArray.set(byteIndex, (byte) 0xFF);
+        byteArray.setByte(byteIndex, (byte) 0xFF);
 
         // Action
         byteArray.setBit((byteIndex * 8L) + 6L, false);
@@ -236,7 +236,7 @@ public class ByteArrayTests {
     public void getBytes_should_get_last_byte_of_byte_array() {
         // Setup
         final MutableByteArray byteArray = new MutableByteArray(1);
-        byteArray.set(0, (byte) 0xFF);
+        byteArray.setByte(0, (byte) 0xFF);
 
         // Action
         final byte[] bytes = byteArray.getBytes(0, 1);
@@ -249,7 +249,7 @@ public class ByteArrayTests {
     public void getBytes_should_throw_when_getting_bytes_past_end_of_byte_array() {
         // Setup
         final MutableByteArray byteArray = new MutableByteArray(1);
-        byteArray.set(0, (byte) 0xFF);
+        byteArray.setByte(0, (byte) 0xFF);
 
         // Action
         byte[] bytes = null;

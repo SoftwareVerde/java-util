@@ -6,7 +6,7 @@ import com.softwareverde.constable.list.List;
 
 public class ImmutableListBuilder<T> {
     public static <T extends Constable<C>, C extends Const> ImmutableList<C> newConstListOfConstItems(final List<T> list) {
-        final ImmutableListBuilder<C> immutableListBuilder = new ImmutableListBuilder<C>(list.getSize());
+        final ImmutableListBuilder<C> immutableListBuilder = new ImmutableListBuilder<C>(list.getCount());
         for (final T item : list) {
             final C constItem = item.asConst();
             immutableListBuilder.add(constItem);
@@ -37,7 +37,7 @@ public class ImmutableListBuilder<T> {
     }
 
     public void addAll(final List<T> collection) {
-        final int newTotalSize = (_javaList.size() + collection.getSize());
+        final int newTotalSize = (_javaList.size() + collection.getCount());
         _javaList.ensureCapacity(newTotalSize);
 
         for (final T item : collection) {

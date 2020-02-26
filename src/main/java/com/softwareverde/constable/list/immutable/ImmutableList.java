@@ -28,7 +28,7 @@ public class ImmutableList<T> implements List<T>, Const {
     }
 
     public ImmutableList(final List<T> list) {
-        _items = new ArrayList<T>(list.getSize());
+        _items = new ArrayList<T>(list.getCount());
         for (final T item : list) {
             _items.add(item);
         }
@@ -77,8 +77,8 @@ public class ImmutableList<T> implements List<T>, Const {
 
         final int size = _items.size();
 
-        final List list = (List) object;
-        if (size != list.getSize()) { return false; }
+        final List<?> list = (List<?>) object;
+        if (size != list.getCount()) { return false; }
         for (int i = 0; i < size; ++i) {
             final T item0 = _items.get(i);
             final Object item1 = list.get(i);

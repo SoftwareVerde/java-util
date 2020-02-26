@@ -15,7 +15,7 @@ public class MutableList<T> implements List<T> {
     }
 
     public MutableList(final List<T> items) {
-        _items = new ArrayList<T>(items.getSize());
+        _items = new ArrayList<T>(items.getCount());
         for (final T item : items) {
             _items.add(item);
         }
@@ -42,7 +42,7 @@ public class MutableList<T> implements List<T> {
     }
 
     public void addAll(final List<T> items) {
-        _items.ensureCapacity(items.getSize());
+        _items.ensureCapacity(items.getCount());
         for (final T item : items) {
             _items.add(item);
         }
@@ -65,7 +65,7 @@ public class MutableList<T> implements List<T> {
     }
 
     public void sort(final Comparator<T> comparator) {
-        Collections.sort(_items, comparator);
+        _items.sort(comparator);
     }
 
     @Override
@@ -111,8 +111,8 @@ public class MutableList<T> implements List<T> {
 
         final int size = _items.size();
 
-        final List list = (List) object;
-        if (size != list.getSize()) { return false; }
+        final List<?> list = (List<?>) object;
+        if (size != list.getCount()) { return false; }
         for (int i = 0; i < size; ++i) {
             final T item0 = _items.get(i);
             final Object item1 = list.get(i);
