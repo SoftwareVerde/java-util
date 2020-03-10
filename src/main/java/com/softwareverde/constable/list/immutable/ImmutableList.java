@@ -34,6 +34,14 @@ public class ImmutableList<T> implements List<T>, Const {
         }
     }
 
+    @SafeVarargs
+    public ImmutableList(final T... items) {
+        _items = new ArrayList<T>(items.length);
+        for (final T item : items) {
+            _items.add(item);
+        }
+    }
+
     @Override
     public T get(final int index) {
         return _items.get(index);
