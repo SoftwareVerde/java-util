@@ -42,4 +42,7 @@ public interface ByteArray extends Constable<ImmutableByteArray> {
 
     @Override
     ImmutableByteArray asConst();
+
+    @Override
+    String toString();
 }

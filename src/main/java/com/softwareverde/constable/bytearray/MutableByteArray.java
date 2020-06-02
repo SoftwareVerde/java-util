@@ -160,8 +160,8 @@ public class MutableByteArray implements ByteArray {
 
     @Override
     public int hashCode() {
-        long value = 0;
-        for (byte b : _bytes) {
+        long value = 0L;
+        for (final byte b : _bytes) {
             value += ByteUtil.byteToLong(b);
         }
         return Long.valueOf(value).hashCode();

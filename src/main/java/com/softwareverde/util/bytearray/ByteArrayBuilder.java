@@ -4,6 +4,8 @@ import com.softwareverde.constable.bytearray.ByteArray;
 import com.softwareverde.constable.bytearray.ByteArrayCore;
 import com.softwareverde.constable.bytearray.ImmutableByteArray;
 import com.softwareverde.constable.bytearray.MutableByteArray;
+import com.softwareverde.util.ByteUtil;
+import com.softwareverde.util.HexUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,6 +177,38 @@ public class ByteArrayBuilder implements ByteArray {
     @Override
     public ImmutableByteArray asConst() {
         return new ImmutableByteArray(_build());
+    }
+
+    @Override
+    public String toString() {
+        final byte[] bytes = _build();
+        return HexUtil.toHexString(bytes);
+    }
+
+    @Override
+    public boolean equals(final Object object) {
+        if (! (object instanceof ByteArray)) { return false; }
+
+        final ByteArray byteArray = (ByteArray) object;
+        if (byteArray.getByteCount() != _totalByteCount) { return false; }
+
+        for (int i = 0; i < _totalByteCount; ++i) {
+            final byte b0 = _getByte(i);
+            final byte b1 = byteArray.getByte(i);
+            if (b0 != b1) { return false; }
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        long value = 0L;
+        for (long i = 0; i < _totalByteCount; ++i) {
+            final byte b = _getByte(i);
+            value += ByteUtil.byteToLong(b);
+        }
+        return Long.valueOf(value).hashCode();
     }
 
     public void clear() {
