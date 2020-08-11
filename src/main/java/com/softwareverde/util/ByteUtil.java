@@ -5,11 +5,27 @@ import com.softwareverde.constable.bytearray.MutableByteArray;
 
 public class ByteUtil {
     public static class Unit {
-        public static final Long BYTES      =          0x01L;
-        public static final Long KILOBYTES  =         0x400L;
-        public static final Long MEGABYTES  =      0x100000L;
-        public static final Long GIGABYTES  =    0x40000000L;
-        public static final Long TERABYTES  = 0x10000000000L;
+        @Deprecated public static final Long BYTES      = Binary.BYTES;
+        @Deprecated public static final Long KILOBYTES  = Binary.KIBIBYTES;
+        @Deprecated public static final Long MEGABYTES  = Binary.MEBIBYTES;
+        @Deprecated public static final Long GIGABYTES  = Binary.GIBIBYTES;
+        @Deprecated public static final Long TERABYTES  = Binary.TEBIBYTES;
+
+        public static class Si {
+            public static final Long BYTES      =             1L;
+            public static final Long KILOBYTES  =          1000L;
+            public static final Long MEGABYTES  =       1000000L;
+            public static final Long GIGABYTES  =    1000000000L;
+            public static final Long TERABYTES  = 1000000000000L;
+        }
+
+        public static class Binary {
+            public static final Long BYTES      =          0x01L;
+            public static final Long KIBIBYTES  =         0x400L;
+            public static final Long MEBIBYTES  =      0x100000L;
+            public static final Long GIBIBYTES  =    0x40000000L;
+            public static final Long TEBIBYTES  = 0x10000000000L;
+        }
     }
 
     protected static long _bytesToLong(final int nativeByteCount, final ByteArray bytes) {
