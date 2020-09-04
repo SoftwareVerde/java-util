@@ -1,7 +1,6 @@
 package com.softwareverde.test.logging;
 
 import com.softwareverde.logging.LineNumberAnnotatedLog;
-import com.softwareverde.logging.Log;
 import com.softwareverde.logging.LogLevel;
 import com.softwareverde.logging.Logger;
 import org.junit.After;

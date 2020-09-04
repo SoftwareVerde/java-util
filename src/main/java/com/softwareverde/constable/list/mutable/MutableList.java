@@ -5,7 +5,10 @@ import com.softwareverde.constable.list.immutable.ImmutableList;
 import com.softwareverde.constable.list.immutable.ImmutableListIterator;
 import com.softwareverde.util.Util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
 
 public class MutableList<T> implements List<T> {
     private final ArrayList<T> _items;
