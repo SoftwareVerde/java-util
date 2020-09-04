@@ -3,11 +3,12 @@ package com.softwareverde.util.bytearray;
 import com.softwareverde.constable.bytearray.ByteArray;
 import com.softwareverde.constable.bytearray.ByteArrayCore;
 import com.softwareverde.constable.bytearray.ImmutableByteArray;
+import com.softwareverde.constable.bytearray.ImmutableByteArrayIterator;
 import com.softwareverde.constable.bytearray.MutableByteArray;
-import com.softwareverde.util.ByteUtil;
 import com.softwareverde.util.HexUtil;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ByteArrayBuilder implements ByteArray {
@@ -203,16 +204,16 @@ public class ByteArrayBuilder implements ByteArray {
 
     @Override
     public int hashCode() {
-        long value = 0L;
-        for (long i = 0; i < _totalByteCount; ++i) {
-            final byte b = _getByte(i);
-            value += ByteUtil.byteToLong(b);
-        }
-        return Long.valueOf(value).hashCode();
+        return ByteArrayCore.hashCode(this);
     }
 
     public void clear() {
         _totalByteCount = 0L;
         _byteArrays.clear();
+    }
+
+    @Override
+    public Iterator<Byte> iterator() {
+        return new ImmutableByteArrayIterator(this);
     }
 }

@@ -3,7 +3,7 @@ package com.softwareverde.constable.bytearray;
 import com.softwareverde.constable.Constable;
 import com.softwareverde.util.HexUtil;
 
-public interface ByteArray extends Constable<ImmutableByteArray> {
+public interface ByteArray extends Constable<ImmutableByteArray>, Iterable<Byte> {
     Integer MAX_BYTE_COUNT = (Integer.MAX_VALUE - 5);
 
     static ByteArray fromHexString(final String hexString) {

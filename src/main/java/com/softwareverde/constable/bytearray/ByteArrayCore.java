@@ -3,6 +3,8 @@ package com.softwareverde.constable.bytearray;
 import com.softwareverde.util.ByteUtil;
 import com.softwareverde.util.HexUtil;
 
+import java.util.Iterator;
+
 public abstract class ByteArrayCore implements ByteArray {
 
     public static boolean getBit(final ByteArray bytes, final long index) {
@@ -11,6 +13,28 @@ public abstract class ByteArrayCore implements ByteArray {
 
         final int bitMask = ( 0x01 << ( 7 - (0x07 & index) ) );
         return ( (b & bitMask) != 0x00 );
+    }
+
+    public static int hashCode(final ByteArray bytes) {
+        final int byteCount = bytes.getByteCount();
+        long value = bytes.getByteCount();
+        if (byteCount <= 8) {
+            for (final byte b : bytes) {
+                value += ByteUtil.byteToLong(b);
+            }
+        }
+        else {
+            // Sample 4 evenly-distributed bytes from the head and tail ends of the array...
+            for (int i = 0; i < 4; ++i) {
+                final int offset = (i > 0 ? ((byteCount / 8) * i) : 0);
+                final byte b0 = bytes.getByte(offset);
+                final byte b1 = bytes.getByte(byteCount - offset - 1);
+
+                value += ByteUtil.byteToLong(b0);
+                value += ByteUtil.byteToLong(b1);
+            }
+        }
+        return Long.valueOf(value).hashCode();
     }
 
     protected byte[] _bytes;
@@ -66,11 +90,7 @@ public abstract class ByteArrayCore implements ByteArray {
 
     @Override
     public int hashCode() {
-        long value = 0L;
-        for (final byte b : _bytes) {
-            value += ByteUtil.byteToLong(b);
-        }
-        return Long.valueOf(value).hashCode();
+        return ByteArrayCore.hashCode(this);
     }
 
     @Override
@@ -95,5 +115,10 @@ public abstract class ByteArrayCore implements ByteArray {
     @Override
     public String toString() {
         return HexUtil.toHexString(_bytes);
+    }
+
+    @Override
+    public Iterator<Byte> iterator() {
+        return new ImmutableByteArrayIterator(this);
     }
 }
