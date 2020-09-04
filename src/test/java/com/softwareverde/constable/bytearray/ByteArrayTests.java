@@ -297,4 +297,34 @@ public class ByteArrayTests {
         Assert.assertTrue(exception instanceof IndexOutOfBoundsException);
         Assert.assertNull(bytes);
     }
+
+    @Test
+    public void identical_arrays_should_have_same_hash_code() {
+        { // Length = 8
+            final ByteArray byteArray0 = new MutableByteArray(new byte[]{ 0, 1, 2, 3, 4, 5, 6, 7 });
+            final ByteArray byteArray1 = new MutableByteArray(new byte[]{ 0, 1, 2, 3, 4, 5, 6, 7 });
+            final int hashCode0 = byteArray0.hashCode();
+            final int hashCode1 = byteArray1.hashCode();
+            Assert.assertEquals(hashCode0, hashCode1);
+            Assert.assertEquals(8, byteArray0.getByteCount());
+        }
+
+        { // Length = 9
+            final ByteArray byteArray0 = new MutableByteArray(new byte[]{ 0, 1, 2, 3, 4, 5, 6, 7, 8 });
+            final ByteArray byteArray1 = new MutableByteArray(new byte[]{ 0, 1, 2, 3, 4, 5, 6, 7, 8 });
+            final int hashCode0 = byteArray0.hashCode();
+            final int hashCode1 = byteArray1.hashCode();
+            Assert.assertEquals(hashCode0, hashCode1);
+            Assert.assertEquals(9, byteArray0.getByteCount());
+        }
+
+        { // Length = 17
+            final ByteArray byteArray0 = new MutableByteArray(new byte[]{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
+            final ByteArray byteArray1 = new MutableByteArray(new byte[]{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
+            final int hashCode0 = byteArray0.hashCode();
+            final int hashCode1 = byteArray1.hashCode();
+            Assert.assertEquals(hashCode0, hashCode1);
+            Assert.assertEquals(17, byteArray0.getByteCount());
+        }
+    }
 }

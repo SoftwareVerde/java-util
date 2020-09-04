@@ -170,7 +170,7 @@ public class ByteArrayBuilder implements ByteArray {
         final long byteIndex = (index >>> 3);
         if (byteIndex >= _totalByteCount) { throw new IndexOutOfBoundsException(); }
 
-        final byte[] bytes = new byte[] { _getByte((int) byteIndex) };
+        final ByteArray bytes = MutableByteArray.wrap(new byte[] { _getByte((int) byteIndex) });
         return ByteArrayCore.getBit(bytes, (index - (byteIndex * 8)));
     }
 

@@ -3,7 +3,7 @@ package com.softwareverde.constable.bytearray;
 import com.softwareverde.util.ByteUtil;
 import com.softwareverde.util.HexUtil;
 
-public class MutableByteArray implements ByteArray {
+public class MutableByteArray extends ByteArrayCore {
     public static MutableByteArray fromHexString(final String hexString) {
         final byte[] bytes = HexUtil.hexStringToByteArray(hexString);
         return MutableByteArray.wrap(bytes);
@@ -18,8 +18,6 @@ public class MutableByteArray implements ByteArray {
         if (bytes == null) { return null; }
         return new MutableByteArray(bytes);
     }
-
-    protected byte[] _bytes;
 
     protected MutableByteArray(final byte[] bytes) {
         _bytes = bytes;
@@ -85,21 +83,6 @@ public class MutableByteArray implements ByteArray {
         }
     }
 
-    @Override
-    public byte getByte(final int index) throws IndexOutOfBoundsException {
-        if (index >= _bytes.length) { throw new IndexOutOfBoundsException(); }
-
-        return _bytes[index];
-    }
-
-    @Override
-    public boolean getBit(final long index) throws IndexOutOfBoundsException {
-        final long byteIndex = (index >>> 3);
-        if (byteIndex >= _bytes.length) { throw new IndexOutOfBoundsException(); }
-
-        return ByteArrayCore.getBit(_bytes, index);
-    }
-
     public void setBit(final long index, final boolean isSet) throws IndexOutOfBoundsException {
         final long byteIndex = (index >>> 3);
         if (byteIndex >= _bytes.length) { throw new IndexOutOfBoundsException(); }
@@ -117,77 +100,8 @@ public class MutableByteArray implements ByteArray {
         }
     }
 
-    @Override
-    public byte[] getBytes(final int index, final int byteCount) throws IndexOutOfBoundsException {
-        if (index + byteCount > _bytes.length) { throw new IndexOutOfBoundsException(); }
-
-        final byte[] bytes = new byte[byteCount];
-        for (int i=0; i<byteCount; ++i) {
-            final int readIndex = (index + i);
-            bytes[i] = _bytes[readIndex];
-        }
-        return bytes;
-    }
-
-    @Override
-    public int getByteCount() {
-        return _bytes.length;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return (_bytes.length == 0);
-    }
-
-    @Override
-    public byte[] getBytes() {
-        return ByteUtil.copyBytes(_bytes);
-    }
-
-    @Override
-    public ByteArray toReverseEndian() {
-        return MutableByteArray.wrap(ByteUtil.reverseEndian(_bytes));
-    }
-
     public byte[] unwrap() {
         return _bytes;
     }
 
-    @Override
-    public ImmutableByteArray asConst() {
-        return new ImmutableByteArray(this);
-    }
-
-    @Override
-    public int hashCode() {
-        long value = 0L;
-        for (final byte b : _bytes) {
-            value += ByteUtil.byteToLong(b);
-        }
-        return Long.valueOf(value).hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null) { return false; }
-
-        final byte[] bytes;
-        {
-            if (obj instanceof ByteArray) {
-                final ByteArray object = (ByteArray) obj;
-                bytes = object.getBytes();
-            }
-            else if (obj instanceof byte[]) {
-                bytes = (byte[]) obj;
-            }
-            else { return false; }
-        }
-
-        return ByteUtil.areEqual(_bytes, bytes);
-    }
-
-    @Override
-    public String toString() {
-        return HexUtil.toHexString(_bytes);
-    }
 }
