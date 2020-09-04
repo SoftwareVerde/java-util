@@ -13,6 +13,23 @@ public interface ByteArray extends Constable<ImmutableByteArray>, Iterable<Byte>
         return new ImmutableByteArray(bytes);
     }
 
+    static boolean areEqual(final ByteArray byteArray0, final ByteArray byteArray1) {
+        if ( (byteArray0 == null) && (byteArray1 == null) ) { return true; }
+        if ( (byteArray0 == null) || (byteArray1 == null) ) { return false; }
+
+        final int byteArray0ByteCount = byteArray0.getByteCount();
+        final int byteArray1ByteCount = byteArray1.getByteCount();
+        if (byteArray0ByteCount != byteArray1ByteCount) { return false; }
+
+        for (int i = 0; i < byteArray0ByteCount; ++i) {
+            final byte b0 = byteArray0.getByte(i);
+            final byte b1 = byteArray1.getByte(i);
+            if (b0 != b1) { return false; }
+        }
+
+        return true;
+    }
+
     static ByteArray copyOf(final byte[] bytes) {
         return ImmutableByteArray.copyOf(bytes);
     }

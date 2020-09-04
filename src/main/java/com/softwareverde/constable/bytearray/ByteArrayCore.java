@@ -101,15 +101,14 @@ public abstract class ByteArrayCore implements ByteArray {
         {
             if (obj instanceof ByteArray) {
                 final ByteArray object = (ByteArray) obj;
-                bytes = object.getBytes();
+                return ByteArray.areEqual(this, object);
             }
             else if (obj instanceof byte[]) {
                 bytes = (byte[]) obj;
+                return ByteUtil.areEqual(_bytes, bytes);
             }
             else { return false; }
         }
-
-        return ByteUtil.areEqual(_bytes, bytes);
     }
 
     @Override
