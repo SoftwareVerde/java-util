@@ -25,7 +25,8 @@ public class ByteBuffer {
         }
     }
 
-    protected int _bufferSize = 1024;
+    protected int _pageByteCount = 1024;
+    protected int _maxByteCount = Integer.MAX_VALUE;
     protected final LinkedList<Buffer> _recycledByteArrays = new LinkedList<Buffer>();
     protected final LinkedList<Buffer> _byteArrayList = new LinkedList<Buffer>();
     protected int _byteCount = 0;
@@ -39,7 +40,7 @@ public class ByteBuffer {
         int byteCount = 0;
         for (final Buffer byteArray : byteArrayList) {
             final int byteCountFromThisArray = Math.min((desiredByteCount - byteCount), byteArray.byteCount);
-            for (int i=0; i<byteCountFromThisArray; ++i) {
+            for (int i = 0; i < byteCountFromThisArray; ++i) {
                 bytes[byteCount + i] = byteArray.bytes[byteArray.startIndex + i];
             }
             byteCount += byteCountFromThisArray;
@@ -71,18 +72,40 @@ public class ByteBuffer {
     }
 
     protected void _resetBuffer() {
-        final byte[] discardedPacket = _readContiguousBytes(_byteCount, true);
-        // Logger.log("IO: DISCARDED PACKET: "+ HexUtil.toHexString(discardedPacket));
+        _readContiguousBytes(_byteCount, true);
+    }
+
+    protected boolean _shouldAllowNewBuffer(final byte[] byteBuffer, final int byteCount) {
+        final int newByteCount = (_byteCount + byteCount);
+        return (newByteCount <= _maxByteCount);
     }
 
     public ByteBuffer() { }
 
+    @Deprecated
     public void setBufferSize(final int bufferSize) {
-        _bufferSize = bufferSize;
+        this.setPageByteCount(bufferSize);
     }
 
+    @Deprecated
     public Integer getBufferSize() {
-        return _bufferSize;
+        return this.getPageByteCount();
+    }
+
+    public void setPageByteCount(final int bufferSize) {
+        _pageByteCount = bufferSize;
+    }
+
+    public int getPageByteCount() {
+        return _pageByteCount;
+    }
+
+    public void setMaxByteCount(final int maxByteCount) {
+        _maxByteCount = maxByteCount;
+    }
+
+    public int getMaxByteCount() {
+        return _maxByteCount;
     }
 
     /**
@@ -91,10 +114,11 @@ public class ByteBuffer {
      *      therefore, it is important that any byte[] fed into appendBytes() is not used again outside of this invocation.
      *  - byteBuffer may be kept in memory indefinitely and recycled via getRecycledBuffer().
      *  - byteCount is used to specify the endIndex of byteBuffer.
+     *  - If the ByteBuffer's logical size would exceed the ByteBuffer's maxByteCount then the buffer is not added.
      */
     public void appendBytes(final byte[] byteBuffer, final int byteCount) {
-        // if (byteCount > bytes.length) { throw new RuntimeException("Invalid byteCount. Attempted to add more bytes than was available within byte array."); }
         final int safeByteCount = Math.min(byteBuffer.length, byteCount);
+        if (! _shouldAllowNewBuffer(byteBuffer, safeByteCount)) { return; }
 
         _byteArrayList.addLast(new Buffer(byteBuffer, 0, safeByteCount));
         _byteCount += safeByteCount;
@@ -102,7 +126,7 @@ public class ByteBuffer {
 
     public byte[] getRecycledBuffer() {
         if (_recycledByteArrays.isEmpty()) {
-            return new byte[_bufferSize];
+            return new byte[_pageByteCount];
         }
 
         final Buffer byteArray = _recycledByteArrays.removeFirst();
