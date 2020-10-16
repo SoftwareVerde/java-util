@@ -82,32 +82,6 @@ public class ByteBuffer {
 
     public ByteBuffer() { }
 
-    @Deprecated
-    public void setBufferSize(final int bufferSize) {
-        this.setPageByteCount(bufferSize);
-    }
-
-    @Deprecated
-    public Integer getBufferSize() {
-        return this.getPageByteCount();
-    }
-
-    public void setPageByteCount(final int bufferSize) {
-        _pageByteCount = bufferSize;
-    }
-
-    public int getPageByteCount() {
-        return _pageByteCount;
-    }
-
-    public void setMaxByteCount(final int maxByteCount) {
-        _maxByteCount = maxByteCount;
-    }
-
-    public int getMaxByteCount() {
-        return _maxByteCount;
-    }
-
     /**
      * Appends byteBuffer to the ByteBuffer.
      *  - byteBuffer is not copied and is used as a part of the internal representation of this class;
@@ -133,12 +107,29 @@ public class ByteBuffer {
         return byteArray.bytes;
     }
 
-    public int getByteCount() {
-        return _byteCount;
+    public void setPageByteCount(final int bufferSize) {
+        _pageByteCount = bufferSize;
     }
 
-    public int getBufferCount() {
+    public void setMaxByteCount(final int maxByteCount) {
+        _maxByteCount = maxByteCount;
+    }
+
+
+    public int getPageByteCount() {
+        return _pageByteCount;
+    }
+
+    public int getMaxByteCount() {
+        return _maxByteCount;
+    }
+
+    public int getPageCount() {
         return (_recycledByteArrays.size() + _byteArrayList.size());
+    }
+
+    public int getByteCount() {
+        return _byteCount;
     }
 
     public byte[] readBytes(final int byteCount) {
@@ -147,5 +138,20 @@ public class ByteBuffer {
 
     public void clear() {
         _resetBuffer();
+    }
+
+    @Deprecated
+    public void setBufferSize(final int bufferSize) {
+        this.setPageByteCount(bufferSize);
+    }
+
+    @Deprecated
+    public Integer getBufferSize() {
+        return this.getPageByteCount();
+    }
+
+    @Deprecated
+    public int getBufferCount() {
+        return this.getPageCount();
     }
 }
