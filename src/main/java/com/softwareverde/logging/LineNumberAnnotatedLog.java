@@ -44,6 +44,11 @@ public class LineNumberAnnotatedLog extends AnnotatedLog {
     }
 
     @Override
+    protected String _getLogLevelAnnotation(final LogLevel logLevel) {
+        return (logLevel != null ? logLevel.toString() : EMPTY_STRING);
+    }
+
+    @Override
     protected String _getTimestampAnnotation() {
         return DateUtil.timestampToDatetimeString(System.currentTimeMillis(), TimeZone.getDefault());
     }

@@ -284,4 +284,8 @@ public class ByteUtil {
             destination.setByte(((destinationByteCount - i) - 1),  value.getByte((valueByteCount - i) - 1));
         }
     }
+
+    public static int compare(final byte b0, final byte b1) {
+        return (Byte.toUnsignedInt(b0) - Byte.toUnsignedInt(b1));
+    }
 }

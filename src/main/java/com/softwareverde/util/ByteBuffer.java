@@ -107,6 +107,10 @@ public class ByteBuffer {
         return byteArray.bytes;
     }
 
+    public void recycleBuffer(final byte[] buffer) {
+        _recycledByteArrays.addLast(new Buffer(buffer, 0, 0));
+    }
+
     public void setPageByteCount(final int bufferSize) {
         _pageByteCount = bufferSize;
     }
@@ -114,7 +118,6 @@ public class ByteBuffer {
     public void setMaxByteCount(final int maxByteCount) {
         _maxByteCount = maxByteCount;
     }
-
 
     public int getPageByteCount() {
         return _pageByteCount;
