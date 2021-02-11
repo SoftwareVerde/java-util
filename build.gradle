@@ -1,5 +1,5 @@
 group 'com.softwareverde'
-version '2.7.0'
+version '2.7.1'
 
 apply plugin: 'java'
 apply plugin: 'java-library'
@@ -9,7 +9,7 @@ sourceCompatibility = 1.8
 task makeJar(type: Jar) {
     manifest {
         attributes  'Implementation-Title': 'Java Util',
-                    'Implementation-Version': version
+                    'Implementation-Version': archiveVersion
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar

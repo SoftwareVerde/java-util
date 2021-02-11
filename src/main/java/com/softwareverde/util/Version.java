@@ -105,6 +105,6 @@ public class Version implements Comparable<Version> {
         final int patchCompare = Util.coalesce(this.patch).compareTo(Util.coalesce(version.patch));
         if (patchCompare != 0) { return patchCompare; }
 
-        return Util.coalesce(this.patch).compareTo(Util.coalesce(version.patch));
+        return Util.coalesce(this.extra).compareTo(Util.coalesce(version.extra));
     }
 }
