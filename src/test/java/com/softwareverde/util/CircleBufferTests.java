@@ -184,4 +184,52 @@ public class CircleBufferTests {
             Assert.assertEquals(Integer.valueOf(i++), item);
         }
     }
+
+    @Test
+    public void should_report_contains_item() {
+        // Setup
+        final CircleBuffer<String> circleBuffer = new CircleBuffer<>(7);
+        final String one = "one";
+        final String two = "two";
+        final String three = "three";
+        final String four = "four";
+        final String five = "five";
+        final String six = "six";
+        final String seven = "seven";
+        final String eight = "eight";
+
+        // Action
+        circleBuffer.push(one);
+        Assert.assertTrue(circleBuffer.contains(one));
+        Assert.assertFalse(circleBuffer.contains(eight));
+
+        circleBuffer.push(two);
+        Assert.assertTrue(circleBuffer.contains(two));
+        Assert.assertFalse(circleBuffer.contains(eight));
+
+        circleBuffer.push(three);
+        Assert.assertTrue(circleBuffer.contains(three));
+        Assert.assertFalse(circleBuffer.contains(eight));
+
+        circleBuffer.push(four);
+        Assert.assertTrue(circleBuffer.contains(four));
+        Assert.assertFalse(circleBuffer.contains(eight));
+
+        circleBuffer.push(five);
+        Assert.assertTrue(circleBuffer.contains(five));
+        Assert.assertFalse(circleBuffer.contains(eight));
+
+        circleBuffer.push(six);
+        Assert.assertTrue(circleBuffer.contains(six));
+        Assert.assertFalse(circleBuffer.contains(eight));
+
+        circleBuffer.push(seven);
+        Assert.assertTrue(circleBuffer.contains(seven));
+        Assert.assertFalse(circleBuffer.contains(eight));
+
+        // Overflow/overwrite
+        circleBuffer.push(eight);
+        Assert.assertTrue(circleBuffer.contains(eight));
+        Assert.assertFalse(circleBuffer.contains(one));
+    }
 }

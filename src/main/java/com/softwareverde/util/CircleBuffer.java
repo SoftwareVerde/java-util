@@ -16,6 +16,17 @@ public class CircleBuffer<T> implements Iterable<T> {
     // ::pushItem   [_] [X] [X] // First filling.                   Before: _writeIndex=3; _readIndex=0; After: _writeIndex=4
     // ::pushItem   [Y] [X] [X] // First overwriting of index 0.    Before: _writeIndex=4; _readIndex=0; After: _writeIndex=5
 
+    protected void _push(final T item) {
+        final int index = (_writeIndex % _items.length);
+        _items[index] = item;
+
+        _writeIndex += 1;
+
+        if (_writeIndex - _readIndex > _items.length) {
+            _readIndex = (_writeIndex - _items.length);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public CircleBuffer(final int itemCount) {
         _items = (T[]) new Object[itemCount];
@@ -24,13 +35,13 @@ public class CircleBuffer<T> implements Iterable<T> {
     }
 
     public synchronized void push(final T item) {
-        final int index = (_writeIndex % _items.length);
-        _items[index] = item;
+        _push(item);
+    }
 
-        _writeIndex += 1;
-
-        if (_writeIndex - _readIndex > _items.length) {
-            _readIndex = (_writeIndex - _items.length);
+    public synchronized void pushAll(final Iterable<T> items) {
+        // TODO: Could gain efficiency by only adding the last _items.length items...
+        for (final T item : items) {
+            _push(item);
         }
     }
 
@@ -47,6 +58,26 @@ public class CircleBuffer<T> implements Iterable<T> {
 
         final int index = ((_readIndex + i) % _items.length);
         return _items[index];
+    }
+
+    public synchronized boolean contains(final T item) {
+        final Iterator<T> iterator = new ImmutableCircleBufferIterator<T>(this);
+        while (iterator.hasNext()) {
+            final T existingItem = iterator.next();
+            if (Util.areEqual(item, existingItem)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public synchronized void clear() {
+        _readIndex = 0;
+        _writeIndex = 0;
+
+        for (int i = 0; i < _items.length; ++i) {
+            _items[i] = null;
+        }
     }
 
     @Override
