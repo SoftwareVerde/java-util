@@ -1,6 +1,7 @@
 package com.softwareverde.util;
 
 import com.softwareverde.constable.bytearray.ByteArray;
+import com.softwareverde.constable.bytearray.ByteArrayCore;
 import com.softwareverde.constable.bytearray.MutableByteArray;
 
 public class ByteUtil {
@@ -251,6 +252,18 @@ public class ByteUtil {
 
     public static byte reverseBits(final byte b) {
         return (byte) (Integer.reverse(b) >>> 24);
+    }
+
+    public static Boolean getBit(final byte b, final int index) {
+        return ByteArrayCore.getBit(ByteArray.wrap(new byte[]{ b }), index);
+    }
+
+    public static Boolean getBit(final byte[] bytes, final int index) {
+        return ByteArrayCore.getBit(MutableByteArray.wrap(bytes), index);
+    }
+
+    public static Boolean getBit(final ByteArray byteArray, final int index) {
+        return ByteArrayCore.getBit(byteArray, index);
     }
 
     public static byte[] getTailBytes(final byte[] bytes, final Integer byteCount) {
