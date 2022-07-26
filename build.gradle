@@ -31,8 +31,6 @@ dependencies {
 
 test {
     maxHeapSize = "4096m"
-    jvmArgs "-XX:MaxPermSize=4096m"
-    jvmArgs "-XX:MaxMetaspaceSize=4096m"
 }
 
 tasks.withType(Test) {
