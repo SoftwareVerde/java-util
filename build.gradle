@@ -1,17 +1,20 @@
 group 'com.softwareverde'
-version '2.7.3'
+version '2.7.5'
 
 apply plugin: 'java'
 apply plugin: 'java-library'
 
-sourceCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 task makeJar(type: Jar) {
     manifest {
         attributes  'Implementation-Title': 'Java Util',
                     'Implementation-Version': archiveVersion
     }
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     with jar
 }
 
@@ -21,15 +24,13 @@ repositories {
 }
 
 dependencies {
-    api                 group: 'com.github.softwareverde',  name: 'java-logging',   version: 'v2.2.0'
+    api                 group: 'com.github.softwareverde',  name: 'java-logging',   version: 'v2.3.0'
 
     testImplementation  group: 'junit',                     name: 'junit',          version: '4.12'
 }
 
 test {
     maxHeapSize = "4096m"
-    jvmArgs "-XX:MaxPermSize=4096m"
-    jvmArgs "-XX:MaxMetaspaceSize=4096m"
 }
 
 tasks.withType(Test) {
