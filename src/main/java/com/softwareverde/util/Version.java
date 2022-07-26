@@ -4,7 +4,8 @@ import java.util.List;
 
 public class Version implements Comparable<Version> {
     public static Version parse(final String versionString) {
-        final List<String> parts = StringUtil.pregMatch("^[v]?([0-9]*)\\.?([0-9]*)\\.?([0-9]*)-?(.*)$", versionString);
+        final List<String> parts = StringUtil.pregMatch("^[v]?([0-9]*)\\.?([0-9]*)\\.?([0-9]*)(.*)$", versionString);
+
         if (parts.isEmpty()) { return null; }
 
         final String lowerCaseVersionString = versionString.toLowerCase();
@@ -80,7 +81,6 @@ public class Version implements Comparable<Version> {
                 stringBuilder.append(this.patch);
 
                 if (this.extra != null) {
-                    stringBuilder.append("-");
                     stringBuilder.append(this.extra);
                 }
             }
