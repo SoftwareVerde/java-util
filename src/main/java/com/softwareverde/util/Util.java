@@ -268,14 +268,24 @@ public class Util {
         return ( (string == null) || (string.trim().isEmpty()) );
     }
 
-    public static String join(final String delimiter, final String[] array) {
+    public static String join(final String delimiter, final Object[] array) {
+        String mutableDelimiter = "";
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i=0; i<array.length; i++) {
-            final String arrayElement = array[i];
-            stringBuilder.append(arrayElement);
-            if (i+1 != array.length) {
-                stringBuilder.append(delimiter);
-            }
+        for (final Object element : array) {
+            stringBuilder.append(mutableDelimiter);
+            stringBuilder.append(element);
+            mutableDelimiter = delimiter;
+        }
+        return stringBuilder.toString();
+    }
+
+    public static String join(final String delimiter, final Iterable<?> list) {
+        String mutableDelimiter = "";
+        StringBuilder stringBuilder = new StringBuilder();
+        for (final Object element : list) {
+            stringBuilder.append(mutableDelimiter);
+            stringBuilder.append(element);
+            mutableDelimiter = delimiter;
         }
         return stringBuilder.toString();
     }
