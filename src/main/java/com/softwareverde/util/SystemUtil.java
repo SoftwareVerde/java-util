@@ -1,6 +1,7 @@
 package com.softwareverde.util;
 
 import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 
 public class SystemUtil {
     protected SystemUtil() { }
@@ -24,5 +25,11 @@ public class SystemUtil {
     public static Boolean isLinuxOperatingSystem() {
         final String operatingSystemName = System.getProperty("os.name").toLowerCase();
         return operatingSystemName.contains("linux");
+    }
+
+    public static Version getJvmVersion() {
+        final RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+        final String versionString = runtimeMXBean.getVmVersion();
+        return Version.parse(versionString);
     }
 }
