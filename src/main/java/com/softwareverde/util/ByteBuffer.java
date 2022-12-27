@@ -1,9 +1,33 @@
 package com.softwareverde.util;
 
+import com.softwareverde.constable.bytearray.ByteArray;
+import com.softwareverde.constable.bytearray.ImmutableByteArray;
+import com.softwareverde.constable.bytearray.MutableByteArray;
+
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ByteBuffer {
+public class ByteBuffer implements ByteArray {
+    @Override
+    public Iterator<Byte> iterator() {
+        return new Iterator<Byte>() {
+            private int _index = 0;
+
+            @Override
+            public boolean hasNext() {
+                return (_index < _byteCount);
+            }
+
+            @Override
+            public Byte next() {
+                final byte b = _getByte(_index);
+                _index += 1;
+                return b;
+            }
+        };
+    }
+
     protected static class Buffer {
         public byte[] bytes;
         public int startIndex;
@@ -80,6 +104,22 @@ public class ByteBuffer {
         return (newByteCount <= _maxByteCount);
     }
 
+    protected byte _getByte(final int index) {
+        int i = 0;
+        for (final Buffer buffer : _byteArrayList) {
+            if (! buffer.hasBytesRemaining()) { continue; }
+
+            if (index <= (i + buffer.byteCount)) {
+                final int bufferIndex = (buffer.startIndex + (index - i));
+                return buffer.bytes[bufferIndex];
+            }
+            else {
+                i += buffer.byteCount;
+            }
+        }
+        throw new IndexOutOfBoundsException();
+    }
+
     public ByteBuffer() { }
 
     /**
@@ -131,8 +171,75 @@ public class ByteBuffer {
         return (_recycledByteArrays.size() + _byteArrayList.size());
     }
 
+    @Override
+    public byte getByte(final int index) throws IndexOutOfBoundsException {
+        return _getByte(index);
+    }
+
+    @Override
+    public byte[] getBytes(final int index, final int byteCount) throws IndexOutOfBoundsException {
+        int bytesRead = 0;
+        final byte[] bytes = new byte[byteCount];
+
+        int byteBufferIndex = 0;
+        for (final Buffer buffer : _byteArrayList) {
+            if (index < (byteBufferIndex + buffer.byteCount)) {
+                int bufferIndex = buffer.startIndex;
+                if (index > byteBufferIndex) { // index is within this buffer but not at its beginning...
+                    final int bufferOffset = (index - byteBufferIndex);
+                    byteBufferIndex += bufferOffset;
+                    bufferIndex += bufferOffset;
+                }
+
+                while ( (bytesRead < byteCount) && (bufferIndex < buffer.byteCount) ) {
+                    bytes[bytesRead] = buffer.bytes[bufferIndex];
+                    bytesRead += 1;
+                    bufferIndex += 1;
+                    byteBufferIndex += 1;
+                }
+
+                if (bytesRead >= byteCount) { break; }
+            }
+            else {
+                byteBufferIndex += buffer.byteCount;
+            }
+        }
+
+        if (bytesRead < byteCount) { throw new IndexOutOfBoundsException(); }
+
+        return bytes;
+    }
+
+    @Override
+    public byte[] getBytes() {
+        return _readContiguousBytes(_byteCount, false);
+    }
+
+    @Override
+    public ByteArray toReverseEndian() {
+        final byte[] bytes = _readContiguousBytes(_byteCount, false);
+        return MutableByteArray.wrap(bytes).toReverseEndian();
+    }
+
     public int getByteCount() {
         return _byteCount;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return (_byteCount == 0);
+    }
+
+    @Override
+    public boolean getBit(final long index) throws IndexOutOfBoundsException {
+        final byte b = _getByte((int) (index / 8L));
+        return ByteUtil.getBit(b, (int) (index % 8L));
+    }
+
+    @Override
+    public ImmutableByteArray asConst() {
+        final byte[] bytes = _readContiguousBytes(_byteCount, false);
+        return new ImmutableByteArray(bytes, false) { };
     }
 
     public byte[] readBytes(final int byteCount) {

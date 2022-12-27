@@ -38,4 +38,9 @@ public class ImmutableByteArray extends ByteArrayCore implements Const {
 
         _bytes = ByteUtil.copyBytes(byteArray.getBytes());
     }
+
+    @Override
+    public ImmutableByteArray asConst() {
+        return this;
+    }
 }
