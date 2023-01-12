@@ -1,23 +1,35 @@
 package com.softwareverde.logging.filelog;
 
+import jdk.vm.ci.meta.Local;
+
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class DateBasedFileLogWriter extends FileLogWriter {
     protected LocalDate currentFileDate;
 
     public DateBasedFileLogWriter(final String logDirectory, final String logFilePrefix, final Long maxByteCount, final boolean shouldBufferOutput) throws IOException {
         super(logDirectory, logFilePrefix, maxByteCount, shouldBufferOutput);
+        currentFileDate = LocalDate.now();
     }
 
     @Override
-    protected File _getNewRotationFile(final String extension) {
+    protected File _getNewRotationFile(final String extension) throws IOException {
         final String dateString;
         {
-            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-            dateString = currentFileDate.format(formatter);
+            BasicFileAttributes attr = Files.readAttributes(_currentFile.toPath(), BasicFileAttributes.class);
+            final Date fileTime = new Date(attr.lastModifiedTime().toMillis());
+            final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+            final TimeZone timeZone = TimeZone.getDefault();
+            simpleDateFormat.setTimeZone(timeZone);
+            dateString = simpleDateFormat.format(fileTime);
         }
 
         int sequenceNumber = 1;

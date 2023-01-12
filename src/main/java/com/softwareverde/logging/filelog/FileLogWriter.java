@@ -106,6 +106,12 @@ public class FileLogWriter implements AbstractLog.Writer {
 
         if (createNewLog) {
             _currentFile = new File(_logDirectory + File.separator + (Util.isBlank(_logFilePrefix) ? "log" : _logFilePrefix) + ".log");
+            if (_currentFile.exists()) {
+                // don't overwrite an existing file (e.g. leftover from killed process), rotate it
+                final File rotatedFile = _rotateLog(true);
+                FileLogWriter.finalizeLog(rotatedFile, true);
+                return rotatedFile;
+            }
             _currentByteCount = 0L;
             if (_shouldBufferOutput) {
                 _currentOutputStream = new BufferedOutputStream(new FileOutputStream(_currentFile), PAGE_SIZE);
@@ -178,15 +184,15 @@ public class FileLogWriter implements AbstractLog.Writer {
 
     @Override
     public synchronized void write(final String string) {
-        _writeString(string);
         _conditionallyRotateLog();
+        _writeString(string);
     }
 
     @Override
     public synchronized void write(final Throwable exception) {
         if (exception == null) {
-            _writeString(null);
             _conditionallyRotateLog();
+            _writeString(null);
             return;
         }
 
@@ -194,8 +200,8 @@ public class FileLogWriter implements AbstractLog.Writer {
             try (final PrintWriter printWriter = new PrintWriter(stringWriter)) {
                 exception.printStackTrace(printWriter);
                 final String string = stringWriter.toString();
-                _writeString(string);
                 _conditionallyRotateLog();
+                _writeString(string);
             }
         }
         catch (final IOException ioException) {
