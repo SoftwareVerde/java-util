@@ -5,14 +5,7 @@ import com.softwareverde.util.ByteUtil;
 import com.softwareverde.util.Util;
 import com.softwareverde.util.type.time.SystemTime;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,9 +63,10 @@ public class FileLogWriter implements AbstractLog.Writer {
     protected final Long _maxByteCount;
     protected Long _currentByteCount = 0L;
     protected File _currentFile;
+    protected boolean _shouldBufferOutput;
     protected OutputStream _currentOutputStream;
 
-    protected File _generateNewFile(final String extension) throws IOException {
+    protected File _getNewRotationFile(final String extension) throws IOException {
         final String dateTimeString;
         {
             final Long now = _systemTime.getCurrentTimeInMilliSeconds();
@@ -89,12 +83,10 @@ public class FileLogWriter implements AbstractLog.Writer {
             final String postfix = (sequenceNumber == null ? "" : ("-" + sequenceNumber));
             final String filename = (_logDirectory + File.separator + (_logFilePrefix != null ? _logFilePrefix + "-" : "") + dateTimeString + postfix + extension);
             final File file = new File(filename);
-            final boolean newFileWasCreated = file.createNewFile();
-
-            if (newFileWasCreated) {
+            final File finalizedFile = new File(filename + ".gz");
+            if (!file.exists() && !finalizedFile.exists()) {
                 return file;
             }
-
             sequenceNumber = (Util.coalesce(sequenceNumber) + 1);
         }
     }
@@ -102,7 +94,7 @@ public class FileLogWriter implements AbstractLog.Writer {
     protected File _rotateLog(final Boolean createNewLog) throws IOException {
         final File oldFile;
         if (_currentFile != null) {
-            oldFile = _generateNewFile(".log");
+            oldFile = _getNewRotationFile(".log");
             final boolean moveWasSuccessful = _currentFile.renameTo(oldFile);
             if (! moveWasSuccessful) {
                 throw new IOException("Unable to rotate log to: " + oldFile);
@@ -115,7 +107,12 @@ public class FileLogWriter implements AbstractLog.Writer {
         if (createNewLog) {
             _currentFile = new File(_logDirectory + File.separator + (Util.isBlank(_logFilePrefix) ? "log" : _logFilePrefix) + ".log");
             _currentByteCount = 0L;
-            _currentOutputStream = new BufferedOutputStream(new FileOutputStream(_currentFile), PAGE_SIZE);
+            if (_shouldBufferOutput) {
+                _currentOutputStream = new BufferedOutputStream(new FileOutputStream(_currentFile), PAGE_SIZE);
+            }
+            else {
+                _currentOutputStream = new FileOutputStream(_currentFile);
+            }
         }
         else {
             _currentFile = null;
@@ -135,7 +132,9 @@ public class FileLogWriter implements AbstractLog.Writer {
 
             _currentByteCount += bytes.length;
         }
-        catch (final IOException exception) { }
+        catch (final IOException exception) {
+            exception.printStackTrace(System.err);
+        }
     }
 
     protected void _conditionallyRotateLog() {
@@ -148,19 +147,18 @@ public class FileLogWriter implements AbstractLog.Writer {
                 FileLogWriter.finalizeLog(oldFile, true);
             }
         }
-        catch (final IOException exception) { }
+        catch (final IOException exception) {
+            exception.printStackTrace(System.err);
+        }
     }
 
-    public FileLogWriter(final String logDirectory, final String logFilePrefix) throws IOException {
-        this(logDirectory, logFilePrefix, null);
-    }
-
-    public FileLogWriter(final String logDirectory, final String logFilePrefix, final Long maxByteCount) throws IOException {
+    public FileLogWriter(final String logDirectory, final String logFilePrefix, final Long maxByteCount, final boolean shouldBufferOutput) throws IOException {
         if (logDirectory == null) { throw new IOException("Unable to create log directory: " + null); }
 
         _logDirectory = logDirectory;
         _logFilePrefix = logFilePrefix;
         _maxByteCount = Util.coalesce(maxByteCount, DEFAULT_LOG_BYTE_COUNT);
+        _shouldBufferOutput = shouldBufferOutput;
 
         { // Ensure log directory exists or can can be written to...
             final File logDirectoryFile = new File(logDirectory);
@@ -200,7 +198,9 @@ public class FileLogWriter implements AbstractLog.Writer {
                 _conditionallyRotateLog();
             }
         }
-        catch (final IOException ioException) { }
+        catch (final IOException ioException) {
+            ioException.printStackTrace(System.err);
+        }
     }
 
     @Override
@@ -208,7 +208,9 @@ public class FileLogWriter implements AbstractLog.Writer {
         try {
             _currentOutputStream.flush();
         }
-        catch (final IOException exception) { }
+        catch (final IOException exception) {
+            exception.printStackTrace(System.err);
+        }
     }
 
     public synchronized void close() {
@@ -217,7 +219,9 @@ public class FileLogWriter implements AbstractLog.Writer {
                 _currentOutputStream.flush();
                 _currentOutputStream.close();
             }
-            catch (final IOException exception) { }
+            catch (final IOException exception) {
+                exception.printStackTrace(System.err);
+            }
         }
 
         if (_currentFile != null) {
@@ -225,7 +229,9 @@ public class FileLogWriter implements AbstractLog.Writer {
                 final File oldLog = _rotateLog(false); // Unsets File and OutputStream members...
                 FileLogWriter.finalizeLog(oldLog, false);
             }
-            catch (final IOException exception) { }
+            catch (final IOException exception) {
+                exception.printStackTrace(System.err);
+            }
         }
     }
 }

@@ -13,15 +13,18 @@ import java.util.TimeZone;
 
 public class AnnotatedFileLog extends LineNumberAnnotatedLog {
     public static AnnotatedFileLog newInstance(final String logDirectory) throws IOException {
-        return AnnotatedFileLog.newInstance(logDirectory, "");
+        return AnnotatedFileLog.newInstance(logDirectory, "", null, true);
     }
     public static AnnotatedFileLog newInstance(final String logDirectory, final String logFilePrefix) throws IOException {
-        final Writer writer = new FileLogWriter(logDirectory, logFilePrefix);
-        return new AnnotatedFileLog(writer);
+        return AnnotatedFileLog.newInstance(logDirectory, logFilePrefix, null, true);
     }
 
     public static AnnotatedFileLog newInstance(final String logDirectory, final String logFilePrefix, final Long maxByteCount) throws IOException {
-        final Writer writer = new FileLogWriter(logDirectory, logFilePrefix, maxByteCount);
+        return AnnotatedFileLog.newInstance(logDirectory, logFilePrefix, maxByteCount, true);
+    }
+
+    public static AnnotatedFileLog newInstance(final String logDirectory, final String logFilePrefix, final Long maxByteCount, final boolean shouldBufferOutput) throws IOException {
+        final Writer writer = new FileLogWriter(logDirectory, logFilePrefix, maxByteCount, shouldBufferOutput);
         return new AnnotatedFileLog(writer);
     }
 
