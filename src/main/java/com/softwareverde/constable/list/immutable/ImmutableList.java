@@ -1,6 +1,7 @@
 package com.softwareverde.constable.list.immutable;
 
 import com.softwareverde.constable.Const;
+import com.softwareverde.constable.iterator.ImmutableIterator;
 import com.softwareverde.constable.list.List;
 import com.softwareverde.util.Util;
 
@@ -34,6 +35,13 @@ public class ImmutableList<T> implements List<T>, Const {
         }
     }
 
+    public ImmutableList(final Iterable<T> iterable) {
+        _items = new ArrayList<T>();
+        for (final T item : iterable) {
+            _items.add(item);
+        }
+    }
+
     @SafeVarargs
     public ImmutableList(final T... items) {
         _items = new ArrayList<T>(items.length);
@@ -48,8 +56,7 @@ public class ImmutableList<T> implements List<T>, Const {
     }
 
     @Override
-    @Deprecated
-    public int getSize() {
+    public int getCount() {
         return _items.size();
     }
 
@@ -70,7 +77,7 @@ public class ImmutableList<T> implements List<T>, Const {
 
     @Override
     public Iterator<T> iterator() {
-        return new ImmutableListIterator<T>(this);
+        return new ImmutableIterator<T>(this);
     }
 
     @Override
@@ -87,6 +94,7 @@ public class ImmutableList<T> implements List<T>, Const {
 
         final List<?> list = (List<?>) object;
         if (size != list.getCount()) { return false; }
+
         for (int i = 0; i < size; ++i) {
             final T item0 = _items.get(i);
             final Object item1 = list.get(i);

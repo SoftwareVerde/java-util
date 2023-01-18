@@ -1,15 +1,15 @@
-package com.softwareverde.constable.list.immutable;
+package com.softwareverde.constable.iterator;
 
 import com.softwareverde.constable.list.List;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ImmutableListIterator<T> implements Iterator<T> {
+public class ImmutableIterator<T> implements Iterator<T> {
     private final List<T> _items;
     private int _index = 0;
 
-    public ImmutableListIterator(final List<T> items) {
+    public ImmutableIterator(final List<T> items) {
         _items = items;
     }
 
@@ -30,7 +30,7 @@ public class ImmutableListIterator<T> implements Iterator<T> {
         return item;
     }
 
-    @Override
+    @Deprecated @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

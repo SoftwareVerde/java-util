@@ -66,6 +66,7 @@ public class AnnotatedFileLogTests {
         try {
             final Class<?> callingClass = this.getClass();
             log.write(callingClass, LogLevel.INFO, "0123456789ABCDEFFEDCBA9876543210", null);
+            log.write(callingClass, LogLevel.INFO, "0123456789ABCDEFFEDCBA9876543210", null);
             log.flush();
 
             Thread.sleep(250L); // Wait for the internal gzip thread to execute...

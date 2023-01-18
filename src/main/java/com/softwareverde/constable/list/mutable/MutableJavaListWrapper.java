@@ -1,6 +1,5 @@
 package com.softwareverde.constable.list.mutable;
 
-import com.softwareverde.constable.Visitor;
 import com.softwareverde.constable.iterator.ImmutableIterator;
 import com.softwareverde.constable.list.List;
 import com.softwareverde.constable.list.immutable.ImmutableList;
@@ -11,56 +10,9 @@ import com.softwareverde.util.Util;
 import java.util.Comparator;
 import java.util.Iterator;
 
-public class MutableList<T> implements iMutableList<T> {
-    public interface MutableVisitor<T> extends Visitor<Container<T>> { }
-
-    protected final java.util.List<T> _items;
-
-    protected MutableList(final java.util.List<T> list) {
-        _items = list;
-    }
-
-    /**
-     * @deprecated
-     * MutableList will become an interface in v3.  Use {@link MutableArrayList} instead.
-     */
-    @Deprecated
-    public MutableList(final java.util.Collection<T> items) {
-        this(new java.util.ArrayList<>(items));
-    }
-
-    /**
-     * @deprecated
-     * MutableList will become an interface in v3.  Use {@link MutableArrayList} instead.
-     */
-    @Deprecated
-    public MutableList(final Iterable<T> items) {
-        this(new java.util.ArrayList<>());
-        for (final T item : items) {
-            _items.add(item);
-        }
-    }
-
-    /**
-     * @deprecated
-     * MutableList will become an interface in v3.  Use {@link MutableArrayList} instead.
-     */
-    @Deprecated
-    public MutableList(final List<T> items) {
-        this(new java.util.ArrayList<>(items.getCount()));
-        for (final T item : items) {
-            _items.add(item);
-        }
-    }
-
-    @Deprecated
-    public MutableList() {
-        this(new java.util.ArrayList<>());
-    }
-
-    @Deprecated
-    public MutableList(final int initialCapacity) {
-        this(new java.util.ArrayList<>(initialCapacity));
+public abstract class MutableJavaListWrapper<T> extends MutableList<T> {
+    protected MutableJavaListWrapper(final java.util.List<T> list) {
+        super(list);
     }
 
     @Override

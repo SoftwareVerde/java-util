@@ -28,7 +28,7 @@ public class ImmutableByteArrayIterator implements Iterator<Byte> {
         return item;
     }
 
-    @Override
+    @Deprecated @Override
     public void remove() {
         throw new UnsupportedOperationException();
     }

@@ -44,7 +44,7 @@ public class Base64Util {
      */
     public static byte[] base64StringToByteArray(final String string) {
         final int delta = (string.endsWith( "==" ) ? 2 : (string.endsWith( "=" ) ? 1 : 0));
-        final Integer bufferSize = (string.length() * 3/4 - delta);
+        final int bufferSize = (string.length() * 3/4 - delta);
         final byte[] buffer = new byte[bufferSize];
         final int mask = 0xFF;
         int index = 0;
