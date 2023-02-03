@@ -10,8 +10,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class IoUtil {
+
+    protected IoUtil() { }
 
     /**
      * Reads the stream until EOF and returns the raw bytes from the stream.
@@ -261,6 +265,68 @@ public class IoUtil {
             }
             outputStream.flush();
             return true;
+        }
+        catch (final Exception exception) {
+            Logger.trace("Unable to write file contents.", exception);
+            return false;
+        }
+    }
+
+    public static ByteArray readCompressed(final InputStream inputStream) {
+        final int pageSize = (16 * 1024);
+
+        try (final GZIPInputStream gzipInputStream = new GZIPInputStream(inputStream, pageSize)) {
+            final ByteBuffer byteBuffer = new ByteBuffer();
+
+            while (true) {
+                final byte[] buffer = new byte[pageSize];
+                final int byteCount = gzipInputStream.read(buffer, 0, pageSize);
+                if (byteCount < 1) { break; }
+                byteBuffer.appendBytes(buffer, byteCount);
+            }
+
+            return byteBuffer;
+        }
+        catch (final Exception exception) {
+            Logger.trace("Unable to read file contents.", exception);
+            return null;
+        }
+    }
+
+    public static ByteArray getCompressedFileContents(final File file) {
+        try (final InputStream inputStream = new FileInputStream(file)) {
+            return IoUtil.readCompressed(inputStream);
+        }
+        catch (final Exception exception) {
+            Logger.trace("Unable to read file contents.", exception);
+            return null;
+        }
+    }
+
+    public static Boolean writeCompressed(final ByteArray bytes, final OutputStream outputStream) {
+        final int pageSize = (16 * 1024);
+
+        int bytesWritten = 0;
+        int bytesRemaining = bytes.getByteCount();
+        try (final GZIPOutputStream gzipOutputStream = new GZIPOutputStream(outputStream, pageSize)) {
+            while (bytesRemaining > 0) {
+                final byte[] buffer = bytes.getBytes(bytesWritten, Math.min(pageSize, bytesRemaining));
+                gzipOutputStream.write(buffer);
+                bytesWritten += buffer.length;
+                bytesRemaining -= buffer.length;
+            }
+            outputStream.flush();
+            return true;
+        }
+        catch (final Exception exception) {
+            Logger.trace("Unable to write file contents.", exception);
+            return false;
+        }
+    }
+
+    public static Boolean putCompressedFileContents(final ByteArray bytes, final File file) {
+        try (final OutputStream outputStream = new FileOutputStream(file)) {
+            return IoUtil.writeCompressed(bytes, outputStream);
         }
         catch (final Exception exception) {
             Logger.trace("Unable to write file contents.", exception);

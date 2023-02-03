@@ -1,5 +1,6 @@
 package com.softwareverde.util;
 
+import com.softwareverde.constable.bytearray.ByteArray;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -150,5 +151,22 @@ public class ByteBufferTests {
         Assert.assertTrue(buffer.getBit(63)); // 4 bytes of zero, 3 bytes of zero, 1 byte of 0x01
         Assert.assertFalse(buffer.getBit(64));
         Assert.assertFalse(buffer.getBit(1024));
+    }
+
+    @Test
+    public void get_byte_should_properly_index_all_bytes() throws Exception {
+        // Setup
+
+        // This is a onvenient way to receive a ByteBuffer with multiple pages;
+        //  if IoUtil.readCompressed changes it implementation then this test will need to be updated.
+        final ByteArray buffer = IoUtil.readCompressed(IoUtil.getResourceAsStream("/00000000000000000C1A742EB218762F507FDF57DAFC02F8F23619AF92C5185E"));
+        Assert.assertTrue(buffer instanceof ByteBuffer);
+
+        // Action
+        final ByteArray expectedBytes = ByteArray.wrap(buffer.getBytes());
+        final Boolean areEqual = ByteUtil.areEqual(expectedBytes, buffer); // Iterates through the array one byte at a time via getByte.
+
+        // Assert
+        Assert.assertTrue(areEqual);
     }
 }

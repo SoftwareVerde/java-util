@@ -109,7 +109,7 @@ public class ByteBuffer implements ByteArray {
         for (final Buffer buffer : _byteArrayList) {
             if (! buffer.hasBytesRemaining()) { continue; }
 
-            if (index <= (i + buffer.byteCount)) {
+            if (index < (i + buffer.byteCount)) {
                 final int bufferIndex = (buffer.startIndex + (index - i));
                 return buffer.bytes[bufferIndex];
             }
