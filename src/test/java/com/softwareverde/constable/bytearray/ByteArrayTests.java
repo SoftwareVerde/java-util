@@ -327,4 +327,95 @@ public class ByteArrayTests {
             Assert.assertEquals(17, byteArray0.getByteCount());
         }
     }
+
+    @Test
+    public void should_get_all_32_bits() {
+        final MutableByteArray mutableByteArray = new MutableByteArray(new byte[]{ 0x55, (byte) 0xAA, 0x55, (byte) 0xAA });
+
+        Assert.assertFalse(mutableByteArray.getBit(0));
+        Assert.assertTrue(mutableByteArray.getBit(1));
+        Assert.assertFalse(mutableByteArray.getBit(2));
+        Assert.assertTrue(mutableByteArray.getBit(3));
+        Assert.assertFalse(mutableByteArray.getBit(4));
+        Assert.assertTrue(mutableByteArray.getBit(5));
+        Assert.assertFalse(mutableByteArray.getBit(6));
+        Assert.assertTrue(mutableByteArray.getBit(7));
+
+        Assert.assertTrue(mutableByteArray.getBit(8));
+        Assert.assertFalse(mutableByteArray.getBit(9));
+        Assert.assertTrue(mutableByteArray.getBit(10));
+        Assert.assertFalse(mutableByteArray.getBit(11));
+        Assert.assertTrue(mutableByteArray.getBit(12));
+        Assert.assertFalse(mutableByteArray.getBit(13));
+        Assert.assertTrue(mutableByteArray.getBit(14));
+        Assert.assertFalse(mutableByteArray.getBit(15));
+
+        Assert.assertFalse(mutableByteArray.getBit(16));
+        Assert.assertTrue(mutableByteArray.getBit(17));
+        Assert.assertFalse(mutableByteArray.getBit(18));
+        Assert.assertTrue(mutableByteArray.getBit(19));
+        Assert.assertFalse(mutableByteArray.getBit(20));
+        Assert.assertTrue(mutableByteArray.getBit(21));
+        Assert.assertFalse(mutableByteArray.getBit(22));
+        Assert.assertTrue(mutableByteArray.getBit(23));
+
+        Assert.assertTrue(mutableByteArray.getBit(24));
+        Assert.assertFalse(mutableByteArray.getBit(25));
+        Assert.assertTrue(mutableByteArray.getBit(26));
+        Assert.assertFalse(mutableByteArray.getBit(27));
+        Assert.assertTrue(mutableByteArray.getBit(28));
+        Assert.assertFalse(mutableByteArray.getBit(29));
+        Assert.assertTrue(mutableByteArray.getBit(30));
+        Assert.assertFalse(mutableByteArray.getBit(31));
+    }
+
+    @Test
+    public void should_get_all_8_set_bits() {
+        final MutableByteArray mutableByteArray = new MutableByteArray(new byte[]{ (byte) 0xFF });
+
+        Assert.assertTrue(mutableByteArray.getBit(0));
+        Assert.assertTrue(mutableByteArray.getBit(1));
+        Assert.assertTrue(mutableByteArray.getBit(2));
+        Assert.assertTrue(mutableByteArray.getBit(3));
+        Assert.assertTrue(mutableByteArray.getBit(4));
+        Assert.assertTrue(mutableByteArray.getBit(5));
+        Assert.assertTrue(mutableByteArray.getBit(6));
+        Assert.assertTrue(mutableByteArray.getBit(7));
+    }
+
+//    @Test
+//    public void performance_test() throws Exception {
+//        final MutableByteArray byteArray = new MutableByteArray(ByteUtil.Unit.Si.MEGABYTES.intValue());
+//        for (int i = 0; i < byteArray.getByteCount(); ++i) {
+//            byteArray.setByte(i, (byte) (Math.random() * Integer.MAX_VALUE));
+//        }
+//
+//        for (int x = 0; x < 1024; ++x) {
+//            final NanoTimer nanoTimer = new NanoTimer();
+//
+//            {
+//                nanoTimer.start();
+//                long bitCount = 0;
+//                for (long i = 0; i < (byteArray.getByteCount() * 8L); ++i) {
+//                    if (ByteArrayCore.getBit_v1(byteArray, i)) {
+//                        bitCount += 1;
+//                    }
+//                }
+//                nanoTimer.stop();
+//                System.out.println("v1: " + nanoTimer.getMillisecondsElapsed() + "ms. " + bitCount);
+//            }
+//
+//            {
+//                nanoTimer.start();
+//                long bitCount = 0;
+//                for (long i = 0; i < (byteArray.getByteCount() * 8L); ++i) {
+//                    if (ByteArrayCore.getBit(byteArray, i)) {
+//                        bitCount += 1;
+//                    }
+//                }
+//                nanoTimer.stop();
+//                System.out.println("v2: " + nanoTimer.getMillisecondsElapsed() + "ms. " + bitCount);
+//            }
+//        }
+//    }
 }

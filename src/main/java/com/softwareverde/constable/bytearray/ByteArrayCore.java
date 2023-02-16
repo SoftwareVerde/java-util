@@ -7,12 +7,26 @@ import java.util.Iterator;
 
 public abstract class ByteArrayCore implements ByteArray {
 
-    public static boolean getBit(final ByteArray bytes, final long index) {
+    @Deprecated
+    public static boolean getBit_v1(final ByteArray bytes, final long index) {
         final int byteIndex = (int) (index >>> 3);
         final byte b = bytes.getByte(byteIndex);
 
         final int bitMask = ( 0x01 << ( 7 - (0x07 & index) ) );
         return ( (b & bitMask) != 0x00 );
+    }
+
+    /**
+     * v2 was measured against v1 by querying 8 million bits 1k times.
+     *  Over the 8 million accesses, the v2 version was 4.15ms faster than v1.
+     */
+    public static boolean getBit(final ByteArray bytes, final long index) {
+        final int byteIndex = (int) (index >>> 3);
+        final byte b = (bytes instanceof ByteArrayCore ? ((ByteArrayCore) bytes)._bytes[byteIndex] : bytes.getByte(byteIndex));
+
+        // return ((b & (1L << (7 - (0x07 & index)))) != 0L); // 2.2ms faster
+        // return (((b >>> (7 - (0x07 & index))) & 1L) != 0L); // 3.8ms faster
+        return (((b << (0x07 & index)) & 0x80) != 0L); // 4.15ms faster
     }
 
     public static int hashCode(final ByteArray bytes) {
