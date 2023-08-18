@@ -1,5 +1,8 @@
 package com.softwareverde.util;
 
+import com.softwareverde.constable.list.List;
+import com.softwareverde.constable.list.mutable.MutableArrayList;
+
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -16,8 +19,9 @@ public class CircleBuffer<T> implements Iterable<T> {
     // ::pushItem   [_] [X] [X] // First filling.                   Before: _writeIndex=3; _readIndex=0; After: _writeIndex=4
     // ::pushItem   [Y] [X] [X] // First overwriting of index 0.    Before: _writeIndex=4; _readIndex=0; After: _writeIndex=5
 
-    protected void _push(final T item) {
+    protected T _push(final T item) {
         final int index = (_writeIndex % _items.length);
+        final T oldItem = _items[index];
         _items[index] = item;
 
         _writeIndex += 1;
@@ -25,6 +29,7 @@ public class CircleBuffer<T> implements Iterable<T> {
         if (_writeIndex - _readIndex > _items.length) {
             _readIndex = (_writeIndex - _items.length);
         }
+        return oldItem;
     }
 
     @SuppressWarnings("unchecked")
@@ -34,15 +39,20 @@ public class CircleBuffer<T> implements Iterable<T> {
         _readIndex = 0;
     }
 
-    public synchronized void push(final T item) {
-        _push(item);
+    public synchronized T push(final T item) {
+        return _push(item);
     }
 
-    public synchronized void pushAll(final Iterable<T> items) {
+    public synchronized List<T> pushAll(final Iterable<T> items) {
         // TODO: Could gain efficiency by only adding the last _items.length items...
+        final MutableArrayList<T> lostItems = new MutableArrayList<>();
         for (final T item : items) {
-            _push(item);
+            final T lostItem = _push(item);
+            if (lostItem != null) {
+                lostItems.add(lostItem);
+            }
         }
+        return lostItems;
     }
 
     public synchronized T pop() {
@@ -50,7 +60,9 @@ public class CircleBuffer<T> implements Iterable<T> {
 
         final int index = (_readIndex % _items.length);
         _readIndex += 1;
-        return _items[index];
+        final T item = _items[index];
+        _items[index] = null; // Prevent returning as a "lostItem" in the future.
+        return item;
     }
 
     public synchronized T get(final int i) {
