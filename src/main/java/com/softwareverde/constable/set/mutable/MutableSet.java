@@ -1,11 +1,12 @@
 package com.softwareverde.constable.set.mutable;
 
+import com.softwareverde.constable.UnsafeVisitor;
 import com.softwareverde.constable.Visitor;
 import com.softwareverde.constable.set.Set;
 import com.softwareverde.util.Container;
 
 public interface MutableSet<T> extends Set<T> {
-    interface MutableVisitor<T> extends Visitor<Container<T>> { }
+    interface MutableVisitor<T> extends UnsafeVisitor<Container<T>> { }
 
     boolean add(T item);
 

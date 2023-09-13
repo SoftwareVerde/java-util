@@ -1,5 +1,6 @@
 package com.softwareverde.constable.set.mutable;
 
+import com.softwareverde.logging.Logger;
 import com.softwareverde.util.Container;
 
 import java.util.Iterator;
@@ -41,7 +42,17 @@ public class MutableJavaSetWrapper<T> implements MutableSet<T> {
             final T value = mutableIterator.next();
 
             final Container<T> container = new Container<>(value);
-            final boolean shouldContinue = visitor.run(container);
+            boolean shouldContinue;
+            try {
+                shouldContinue = visitor.run(container);
+            }
+            catch (final Exception exception) {
+                Logger.debug(exception);
+                shouldContinue = false;
+            }
+            finally {
+                visitor.andFinally();
+            }
 
             if (container.value == null) {
                 mutableIterator.remove();

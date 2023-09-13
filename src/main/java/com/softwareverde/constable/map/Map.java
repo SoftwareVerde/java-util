@@ -1,7 +1,8 @@
 package com.softwareverde.constable.map;
 
-import com.softwareverde.constable.Visitor;
+import com.softwareverde.constable.UnsafeVisitor;
 import com.softwareverde.constable.set.Set;
+import com.softwareverde.logging.Logger;
 import com.softwareverde.util.Tuple;
 
 public interface Map<Key, Value> extends Iterable<Tuple<Key, Value>> {
@@ -17,10 +18,21 @@ public interface Map<Key, Value> extends Iterable<Tuple<Key, Value>> {
     Set<Key> getKeys();
     Set<Value> getValues();
 
-    default void visit(final Visitor<Tuple<Key, Value>> visitor) {
+    default void visit(final UnsafeVisitor<Tuple<Key, Value>> visitor) {
         for (final Tuple<Key, Value> tuple : Map.this) {
-            final boolean shouldContinue = visitor.run(tuple);
-            if (!shouldContinue) { break; }
+            boolean shouldContinue;
+            try {
+                shouldContinue = visitor.run(tuple);
+            }
+            catch (final Exception exception) {
+                Logger.debug(exception);
+                shouldContinue = false;
+            }
+            finally {
+                visitor.andFinally();
+            }
+
+            if (! shouldContinue) { break; }
         }
     }
 }

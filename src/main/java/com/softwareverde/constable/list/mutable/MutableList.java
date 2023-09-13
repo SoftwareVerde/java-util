@@ -1,10 +1,11 @@
 package com.softwareverde.constable.list.mutable;
 
-import com.softwareverde.constable.Visitor;
+import com.softwareverde.constable.UnsafeVisitor;
 import com.softwareverde.constable.iterator.ImmutableIterator;
 import com.softwareverde.constable.list.List;
 import com.softwareverde.constable.list.immutable.ImmutableList;
 import com.softwareverde.constable.set.Set;
+import com.softwareverde.logging.Logger;
 import com.softwareverde.util.Container;
 import com.softwareverde.util.Util;
 
@@ -12,7 +13,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 public class MutableList<T> implements iMutableList<T> {
-    public interface MutableVisitor<T> extends Visitor<Container<T>> { }
+    public interface MutableVisitor<T> extends UnsafeVisitor<Container<T>> { }
 
     protected final java.util.List<T> _items;
 
@@ -109,7 +110,17 @@ public class MutableList<T> implements iMutableList<T> {
             final T value = mutableIterator.next();
 
             final Container<T> container = new Container<>(value);
-            final boolean shouldContinue = visitor.run(container);
+            boolean shouldContinue;
+            try {
+                shouldContinue = visitor.run(container);
+            }
+            catch (final Exception exception) {
+                Logger.debug(exception);
+                shouldContinue = false;
+            }
+            finally {
+                visitor.andFinally();
+            }
 
             if (container.value == null) {
                 mutableIterator.remove();

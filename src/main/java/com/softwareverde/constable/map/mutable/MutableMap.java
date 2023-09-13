@@ -1,6 +1,7 @@
 package com.softwareverde.constable.map.mutable;
 
 import com.softwareverde.constable.Factory;
+import com.softwareverde.constable.UnsafeVisitor;
 import com.softwareverde.constable.Visitor;
 import com.softwareverde.constable.map.Map;
 import com.softwareverde.util.Tuple;
@@ -8,7 +9,7 @@ import com.softwareverde.util.Tuple;
 import java.util.Iterator;
 
 public interface MutableMap<Key, Value> extends Map<Key, Value> {
-    interface MutableVisitor<Key, Value> extends Visitor<Tuple<Key, Value>> { }
+    interface MutableVisitor<Key, Value> extends UnsafeVisitor<Tuple<Key, Value>> { }
 
     void put(Key key, Value value);
 

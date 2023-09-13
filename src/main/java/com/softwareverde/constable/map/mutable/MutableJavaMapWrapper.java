@@ -1,5 +1,6 @@
 package com.softwareverde.constable.map.mutable;
 
+import com.softwareverde.constable.UnsafeVisitor;
 import com.softwareverde.constable.Visitor;
 import com.softwareverde.constable.map.ImmutableJavaMapIterator;
 import com.softwareverde.constable.set.JavaSetWrapper;
@@ -63,7 +64,7 @@ public abstract class MutableJavaMapWrapper<Key, Value> implements MutableMap<Ke
     }
 
     @Override
-    public void visit(final Visitor<Tuple<Key, Value>> visitor) {
+    public void visit(final UnsafeVisitor<Tuple<Key, Value>> visitor) {
         MutableMapUtil.visit(_map, visitor);
     }
 
