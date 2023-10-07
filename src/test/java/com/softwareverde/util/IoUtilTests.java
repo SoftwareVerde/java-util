@@ -1,5 +1,7 @@
 package com.softwareverde.util;
 
+import com.softwareverde.constable.bytearray.ByteArray;
+import com.softwareverde.constable.bytearray.MutableByteArray;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -82,5 +84,21 @@ public class IoUtilTests {
             Assert.assertEquals(11, bytesRead2);
             Assert.assertEquals(0, bytesRead3);
         }
+    }
+
+    @Test
+    public void should_compress_and_decompress() throws Exception {
+        final String expectedString = "Mary had a little lamb, little lamb, little lamb. Mary had a little lamb, its fleece was white as snow.";
+        final byte[] bytes = StringUtil.stringToBytes(expectedString);
+        final ByteArray compressedByteArray = IoUtil.compress(MutableByteArray.wrap(bytes));
+        final ByteArray decompressedByteArray = IoUtil.decompress(compressedByteArray);
+
+        Assert.assertNotNull(compressedByteArray);
+        Assert.assertNotNull(decompressedByteArray);
+
+        final String resultString = StringUtil.bytesToString(decompressedByteArray.getBytes());
+
+        Assert.assertTrue(compressedByteArray.getByteCount() < bytes.length);
+        Assert.assertEquals(expectedString, resultString);
     }
 }

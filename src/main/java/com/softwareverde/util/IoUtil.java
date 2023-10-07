@@ -1,8 +1,10 @@
 package com.softwareverde.util;
 
 import com.softwareverde.constable.bytearray.ByteArray;
+import com.softwareverde.constable.bytearray.MutableByteArray;
 import com.softwareverde.logging.Logger;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -269,6 +271,32 @@ public class IoUtil {
         catch (final Exception exception) {
             Logger.trace("Unable to write file contents.", exception);
             return false;
+        }
+    }
+
+    public static ByteArray compress(final ByteArray bytes) {
+        if (bytes == null) { return null; }
+
+        try (final ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            IoUtil.writeCompressed(bytes, outputStream);
+            return MutableByteArray.wrap(outputStream.toByteArray());
+        }
+        catch (final Exception exception) {
+            Logger.debug(exception);
+            return null;
+        }
+    }
+
+    public static ByteArray decompress(final ByteArray byteArray) {
+        if (byteArray == null) { return null; }
+
+        final byte[] bytes = byteArray.getBytes();
+        try (final ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes)) {
+            return IoUtil.readCompressed(inputStream);
+        }
+        catch (final Exception exception) {
+            Logger.debug(exception);
+            return null;
         }
     }
 
